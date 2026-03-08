@@ -10,9 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+
         User::create([
-            'name' => 'Admin System',
-            'nickname' => 'Admin',
+            'name' => 'Admin Kos',
+            'nickname' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
@@ -20,17 +21,17 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Owner Kos',
-            'nickname' => 'Rafi',
-            'email' => 'owner@gmail.com',
+            'name' => 'Pegawai User',
+            'nickname' => 'pegawai',
+            'email' => 'pegawai@gmail.com',
             'password' => Hash::make('password'),
-            'role' => 'owner',
+            'role' => 'pegawai',
             'phone' => '08123456782',
         ]);
 
         User::create([
             'name' => 'Penyewa User',
-            'nickname' => 'Jenengmu',
+            'nickname' => 'penyewa',
             'email' => 'penyewa@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'penyewa',

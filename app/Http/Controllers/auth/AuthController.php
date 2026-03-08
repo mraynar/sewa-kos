@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class LoginControllerRent extends Controller
+class AuthController extends Controller
 {
     public function index()
     {
@@ -31,19 +31,15 @@ class LoginControllerRent extends Controller
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
             $user = Auth::user();
 
             if ($user->isAdmin()) {
-                Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Akses ditolak. Silakan gunakan jalur khusus Admin Master.',
-                ])->withInput($request->only('email'));
+                return redirect()->route('admin.dashboard');
             }
 
-            $request->session()->regenerate();
-
-            if ($user->isOwner()) {
-                return redirect()->route('owner.dashboard');
+            if ($user->isPegawai()) {
+                return redirect()->route('pegawai.dashboard');
             }
 
             return redirect()->route('home');

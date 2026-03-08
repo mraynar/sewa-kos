@@ -16,11 +16,10 @@
                     Edit Profil
                 </button>
 
-                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full bg-red-50 text-red-500 font-black py-4 rounded-2xl border border-red-100 hover:bg-red-500 hover:text-white transition-all active:scale-95 flex items-center justify-center gap-3">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Keluar Akun
+                    <button type="submit" class="w-full bg-red-50 text-red-500 font-black py-4 rounded-2xl border border-red-100 hover:bg-red-500 hover:text-white transition-all">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Keluar Akun
                     </button>
                 </form>
             </div>

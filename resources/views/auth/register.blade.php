@@ -14,7 +14,7 @@
 
 <body class="bg-gray-50 font-sans antialiased">
     <div class="min-h-screen flex flex-col justify-center">
-        <div class="flex min-h-screen bg-white">
+        <div class="flex min-h-screen bg-slate-100">
             <div class="hidden lg:flex lg:w-3/5 bg-primary relative overflow-hidden items-center justify-center">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"></div>
                 <img src="{{ asset('images/cover_web/kos3.jpg') }}"

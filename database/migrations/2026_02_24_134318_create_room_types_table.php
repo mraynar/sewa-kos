@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->text('description');
-            $table->json('facilities');
+            $table->text('facilities');
             $table->integer('base_price_daily');
             $table->integer('base_price_weekly');
             $table->integer('base_price_monthly');

@@ -37,9 +37,9 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isOwner(): bool
+    public function isPegawai(): bool
     {
-        return $this->role === 'owner';
+        return $this->role === 'pegawai';
     }
 
     public function isPenyewa(): bool
