@@ -15,11 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('nickname');
+            $table->string('full_name_ktp')->nullable();
             $table->string('email')->unique();
+            $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('ktp_photo')->nullable();
+            $table->string('selfie_photo')->nullable();
+            $table->enum('is_verified', ['pending', 'verified', 'rejected'])->nullable();
             $table->enum('role', ['admin', 'pegawai', 'penyewa'])->default('penyewa');
+            $table->enum('gender', ['Laki-laki', 'Perempuan'])->nullable();
+            $table->date('birth_date')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

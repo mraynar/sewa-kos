@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('booking_service', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->index()->constrained()->onDelete('cascade');
+            $table->string('booking_id', 50)->index();
+            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
             $table->foreignId('additional_service_id')->index()->constrained()->onDelete('cascade');
             $table->timestamps();
         });

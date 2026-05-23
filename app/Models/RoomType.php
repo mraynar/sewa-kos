@@ -16,11 +16,8 @@ class RoomType extends Model
         'description',
         'facilities',
         'base_price_daily',
+        'base_price_weekly',
         'base_price_monthly'
-    ];
-
-    protected $casts = [
-        'facilities' => 'array',
     ];
 
     public function rooms(): HasMany

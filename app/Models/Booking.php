@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Booking extends Model
 {
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
+        'id',
         'user_id',
         'room_id',
         'check_in',
@@ -35,6 +40,8 @@ class Booking extends Model
 
     public function additionalServices(): BelongsToMany
     {
-        return $this->belongsToMany(AdditionalService::class, 'booking_service');
+        return $this->belongsToMany(AdditionalService::class, 'booking_service')
+            ->withPivot('quantity', 'price_at_purchase')
+            ->withTimestamps();
     }
 }

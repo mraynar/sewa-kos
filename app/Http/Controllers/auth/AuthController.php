@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -18,35 +18,27 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        $userExists = User::where('email', $request->email)->first();
+        $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
-        if (!$userExists) {
-            return back()->withErrors([
-                'email' => 'Email tidak ditemukan dalam sistem kami.',
-            ])->withInput($request->only('email'));
-        }
-
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt([$fieldType => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
             $user = Auth::user();
 
             if ($user->isAdmin()) {
                 return redirect()->route('admin.dashboard');
             }
-
             if ($user->isPegawai()) {
                 return redirect()->route('pegawai.dashboard');
             }
-
             return redirect()->route('home');
         }
 
         return back()->withErrors([
-            'password' => 'Kata sandi yang Anda masukkan salah.',
+            'email' => 'Nomor HP/Email atau kata sandi salah!',
         ])->withInput($request->only('email'));
     }
 
@@ -58,14 +50,16 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nickname' => 'required|string|max:15|unique:users,nickname',
+            'nickname' => 'required|string|max:255|unique:users,nickname',
             'email'    => 'required|string|email|max:255|unique:users,email',
             'phone'    => 'required|string|max:15|unique:users,phone',
             'password' => 'required|string|min:8',
+            'confirm_password' => 'required|same:password',
         ], [
-            'nickname.unique' => 'Nama panggilan ini sudah digunakan, pilih nama lain.',
-            'email.unique'    => 'Email ini sudah terdaftar, silakan gunakan email lain.',
-            'phone.unique'    => 'Nomor telepon ini sudah terdaftar di sistem kami.',
+            'nickname.unique' => 'Nama panggilan ini sudah digunakan.',
+            'email.unique'    => 'Email ini sudah terdaftar.',
+            'phone.unique'    => 'Nomor telepon ini sudah terdaftar.',
+            'confirm_password.same' => 'Konfirmasi kata sandi tidak cocok!',
         ]);
 
         User::create([
@@ -77,7 +71,7 @@ class AuthController extends Controller
             'role'     => 'penyewa',
         ]);
 
-        return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan masuk.');
+        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan masuk.');
     }
 
     public function logout(Request $request)
