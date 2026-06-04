@@ -81,7 +81,30 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span class="text-xs text-gray-400 italic">No Action</span>
+                                @if ($task->service_status === 'done')
+                                    <span class="text-xs text-emerald-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</span>
+                                @else
+                                    <div class="flex items-center justify-center gap-2">
+                                        @if ($task->service_status === 'pending' || is_null($task->service_status))
+                                            <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="status" value="on_progress">
+                                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg transition duration-200">
+                                                    Mulai
+                                                </button>
+                                            </form>
+                                        @endif
+                                        <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="done">
+                                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg transition duration-200">
+                                                Selesai
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
                             </td>
                         </tr>
                     @empty
