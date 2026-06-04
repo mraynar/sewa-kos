@@ -75,7 +75,7 @@
 
     <div class="flex-1 flex flex-col">
       <div class="bg-white shadow p-6 flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+        <h2 class="text-2xl font-bold text-gray-800">@yield('page_title', 'Dashboard')</h2>
         <div class="text-2xl font-bold text-gray-800" id="jam"></div>
       </div>
 
