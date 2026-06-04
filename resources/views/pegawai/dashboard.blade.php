@@ -76,7 +76,7 @@
                         <tbody class="divide-y divide-gray-100">
                             @foreach($upcomingTasks as $index => $task)
                                 <tr class="hover:bg-blue-50/30 transition-colors">
-                                    <td class="px-6 py-4 text-xs font-bold text-slate-400">{{ $index + 1 }}</td>
+                                    <td class="px-6 py-4 text-xs font-bold text-slate-400">{{ $upcomingTasks->firstItem() + $index }}</td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-col">
                                             <span class="font-black text-slate-800 text-sm">Kamar {{ $task->booking->room->room_number ?? '-' }}</span>
@@ -115,6 +115,11 @@
                         </tbody>
                     </table>
                 </div>
+                @if($upcomingTasks->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-100 bg-slate-50/50">
+                        {{ $upcomingTasks->links() }}
+                    </div>
+                @endif
             @else
                 <!-- Empty State Token -->
                 <div class="flex flex-col items-center justify-center py-16">

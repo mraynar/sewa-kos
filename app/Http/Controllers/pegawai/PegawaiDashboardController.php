@@ -52,7 +52,7 @@ class PegawaiDashboardController extends Controller
                     ->orWhere('service_status', 'on_progress');
             })
             ->orderBy('created_at', 'asc')
-            ->get();
+            ->paginate(5);
 
         return view('pegawai.dashboard', compact(
             'totalTasks',
