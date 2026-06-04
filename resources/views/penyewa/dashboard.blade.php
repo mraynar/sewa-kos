@@ -80,6 +80,115 @@
         </div>
     </section>
 
+    @auth
+        @php
+            $activeBooking = \App\Models\Booking::with(['room.roomType'])
+                ->where('user_id', auth()->id())
+                ->where('status', 'paid')
+                ->latest()
+                ->first();
+        @endphp
+
+        @if ($activeBooking)
+            @php
+                $bookingServices = \App\Models\BookingService::with('additionalService')
+                    ->where('booking_id', $activeBooking->id)
+                    ->get();
+            @endphp
+            <section class="py-16 bg-slate-50 border-b border-slate-200">
+                <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                    <!-- Section Title -->
+                    <div class="flex items-center gap-2 mb-8 text-left">
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Status Hunian Aktif</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Card 1: Kamar Info -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 text-left space-y-4 lg:col-span-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[9px] font-black bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full border border-emerald-100 uppercase">
+                                    Aktif Menghuni
+                                </span>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-black text-slate-800">Kamar {{ $activeBooking->room->room_number }}</h4>
+                                <p class="text-xs text-slate-400 font-semibold mt-0.5">{{ $activeBooking->room->roomType->name }}</p>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100 space-y-2">
+                                <div class="flex justify-between text-xs font-semibold">
+                                    <span class="text-slate-400 uppercase">Check In</span>
+                                    <span class="text-slate-700">{{ \Carbon\Carbon::parse($activeBooking->check_in)->translatedFormat('d M Y') }}</span>
+                                </div>
+                                <div class="flex justify-between text-xs font-semibold">
+                                    <span class="text-slate-400 uppercase">Check Out</span>
+                                    <span class="text-slate-700">{{ \Carbon\Carbon::parse($activeBooking->check_out)->translatedFormat('d M Y') }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Layanan Tambahan -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 text-left lg:col-span-2 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100 uppercase">
+                                    Layanan Tambahan Aktif
+                                </span>
+                            </div>
+                            
+                            @if ($bookingServices->count() > 0)
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-slate-100">
+                                                <th class="text-[9px] font-black text-slate-400 uppercase tracking-widest pb-3">Layanan</th>
+                                                <th class="text-[9px] font-black text-slate-400 uppercase tracking-widest pb-3 text-center">Jumlah</th>
+                                                <th class="text-[9px] font-black text-slate-400 uppercase tracking-widest pb-3 text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100">
+                                            @foreach ($bookingServices as $service)
+                                                <tr>
+                                                    <td class="py-3 text-xs font-bold text-slate-800">
+                                                        {{ $service->additionalService->service_name ?? 'Layanan' }}
+                                                    </td>
+                                                    <td class="py-3 text-xs font-bold text-slate-700 text-center">
+                                                        {{ $service->quantity }}
+                                                    </td>
+                                                    <td class="py-3 text-center">
+                                                        @php
+                                                            $badge_class = 'bg-amber-100 text-amber-600 border border-amber-200';
+                                                            $status_text = 'Belum Dikerjakan';
+                                                            
+                                                            if ($service->service_status === 'done') {
+                                                                $badge_class = 'bg-emerald-100 text-emerald-600 border border-emerald-200';
+                                                                $status_text = 'Selesai';
+                                                            } elseif ($service->service_status === 'on_progress') {
+                                                                $badge_class = 'bg-blue-100 text-blue-600 border border-blue-200';
+                                                                $status_text = 'Sedang Dikerjakan';
+                                                            }
+                                                        @endphp
+                                                        <span class="px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase {{ $badge_class }}">
+                                                            {{ $status_text }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <div class="flex flex-col items-center justify-center py-6">
+                                    <i class="fa-solid fa-bell-slash text-2xl text-slate-200 mb-2"></i>
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Tidak ada layanan tambahan aktif</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </section>
+        @endif
+    @endauth
+
     <section id="daftar-kamar" class="py-20 bg-slate-50">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
