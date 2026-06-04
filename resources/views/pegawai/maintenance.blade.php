@@ -12,6 +12,21 @@
         <p class="text-sm text-gray-500 mt-1">Kelola perbaikan kerusakan fasilitas dari penyewa serta pemeliharaan rutin kos.</p>
     </div>
 
+    <!-- Success Feedback Banner -->
+    @if (session('success'))
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-3xl p-5 mb-6 flex items-center justify-between shadow-sm animate-fade-in">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-emerald-500/10 text-emerald-600 rounded-xl">
+                    <i class="fa-solid fa-circle-check text-base"></i>
+                </div>
+                <span class="text-xs font-black uppercase tracking-wider">{{ session('success') }}</span>
+            </div>
+            <button onclick="this.parentElement.style.display='none'" class="text-emerald-500 hover:text-emerald-700 transition active:scale-90">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- Tab Switcher & Status Filter Wrapper -->
     <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 space-y-6">
         <!-- Tab Switcher -->
@@ -102,23 +117,13 @@
                                 @else
                                     <div class="flex gap-2">
                                         @if ($report->status === 'pending')
-                                            <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="hidden" name="status" value="on_progress">
-                                                <button type="submit" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[9px] tracking-widest active:scale-95 px-3 py-1.5">
-                                                    Proses
-                                                </button>
-                                            </form>
-                                        @endif
-                                        <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="hidden" name="status" value="done">
-                                            <button type="submit" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[9px] tracking-widest active:scale-95 px-3 py-1.5">
-                                                Selesai
+                                            <button type="button" onclick="openMaintenanceConfirmModal('{{ route('pegawai.maintenance.update', $report->id) }}', 'on_progress')" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[9px] tracking-widest active:scale-95 px-3 py-1.5">
+                                                Proses
                                             </button>
-                                        </form>
+                                        @endif
+                                        <button type="button" onclick="openMaintenanceConfirmModal('{{ route('pegawai.maintenance.update', $report->id) }}', 'done')" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[9px] tracking-widest active:scale-95 px-3 py-1.5">
+                                            Selesai
+                                        </button>
                                     </div>
                                 @endif
                             </div>
@@ -188,23 +193,13 @@
                                             @else
                                                 <div class="flex items-center justify-center gap-2">
                                                     @if ($report->status === 'pending')
-                                                        <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <input type="hidden" name="status" value="on_progress">
-                                                            <button type="submit" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
-                                                                Proses
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                    <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <input type="hidden" name="status" value="done">
-                                                        <button type="submit" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
-                                                            Selesai
+                                                        <button type="button" onclick="openMaintenanceConfirmModal('{{ route('pegawai.maintenance.update', $report->id) }}', 'on_progress')" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                            Proses
                                                         </button>
-                                                    </form>
+                                                    @endif
+                                                    <button type="button" onclick="openMaintenanceConfirmModal('{{ route('pegawai.maintenance.update', $report->id) }}', 'done')" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                        Selesai
+                                                    </button>
                                                 </div>
                                             @endif
                                         </td>
@@ -233,6 +228,37 @@
     </div>
 </div>
 
+<!-- Status Confirmation Modal -->
+<div id="maintenanceConfirmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white rounded-3xl p-8 max-w-sm w-full border border-gray-100 shadow-xl transform transition-all scale-95 duration-300">
+        <div class="flex flex-col items-center text-center space-y-4">
+            <!-- Icon -->
+            <div id="modalIconBg" class="p-4 rounded-full">
+                <i id="modalIcon" class="fa-solid text-3xl"></i>
+            </div>
+            <!-- Title -->
+            <h4 id="modalTitle" class="text-lg font-black text-slate-800 uppercase tracking-tight"></h4>
+            <!-- Description -->
+            <p id="modalDesc" class="text-sm text-gray-500 font-medium leading-relaxed"></p>
+            
+            <!-- Actions -->
+            <div class="flex items-center gap-3 w-full pt-4">
+                <button type="button" onclick="closeMaintenanceConfirmModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black uppercase text-[10px] tracking-widest py-3 transition active:scale-95">
+                    Batal
+                </button>
+                <form id="maintenanceConfirmForm" method="POST" action="" class="flex-1">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" id="modalStatusInput" value="">
+                    <button type="submit" id="modalSubmitBtn" class="w-full text-white rounded-2xl font-black uppercase text-[10px] tracking-widest py-3 transition active:scale-95">
+                        Ya, Ubah
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function openPhotoModal(src) {
         const modal = document.getElementById('photoModal');
@@ -244,5 +270,50 @@
     function closePhotoModal() {
         document.getElementById('photoModal').classList.replace('flex', 'hidden');
     }
+
+    function openMaintenanceConfirmModal(actionUrl, status) {
+        const modal = document.getElementById('maintenanceConfirmModal');
+        const form = document.getElementById('maintenanceConfirmForm');
+        const statusInput = document.getElementById('modalStatusInput');
+        const iconBg = document.getElementById('modalIconBg');
+        const icon = document.getElementById('modalIcon');
+        const title = document.getElementById('modalTitle');
+        const desc = document.getElementById('modalDesc');
+        const submitBtn = document.getElementById('modalSubmitBtn');
+
+        form.action = actionUrl;
+        statusInput.value = status;
+
+        if (status === 'on_progress') {
+            iconBg.className = 'p-4 bg-blue-50 text-blue-600 rounded-full';
+            icon.className = 'fa-solid fa-hourglass-half text-3xl';
+            title.textContent = 'Mulai Perbaikan';
+            desc.textContent = 'Apakah Anda yakin ingin mengubah status laporan ini menjadi Sedang Dikerjakan?';
+            submitBtn.className = 'w-full bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest py-3 transition active:scale-95';
+            submitBtn.textContent = 'Ya, Mulai';
+        } else if (status === 'done') {
+            iconBg.className = 'p-4 bg-emerald-50 text-emerald-600 rounded-full';
+            icon.className = 'fa-solid fa-circle-check text-3xl';
+            title.textContent = 'Konfirmasi Selesai';
+            desc.textContent = 'Apakah Anda yakin perbaikan fasilitas/kamar ini telah selesai dikerjakan?';
+            submitBtn.className = 'w-full bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest py-3 transition active:scale-95';
+            submitBtn.textContent = 'Ya, Selesai';
+        }
+
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMaintenanceConfirmModal() {
+        const modal = document.getElementById('maintenanceConfirmModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeMaintenanceConfirmModal();
+        }
+    });
 </script>
 @endsection
