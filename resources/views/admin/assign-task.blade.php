@@ -133,7 +133,7 @@
                       <div class="flex items-center gap-2">
                         <div class="w-2 h-2 rounded-full bg-green-500"></div>
                         <span
-                          class="text-xs font-black text-slate-700 uppercase">{{ $task->employee->nickname ?? 'Staf' }}</span>
+                          class="text-xs font-black text-slate-700 uppercase">{{ $task->employee->nickname ?? ($task->employee->name ?? 'Staf') }}</span>
                       </div>
                     @else
                       <span
@@ -141,7 +141,12 @@
                     @endif
                   </td>
                   <td class="px-6 py-4 text-center">
-                    @if ($task->employee_id)
+                    @if ($task->service_status === 'done')
+                      <span
+                        class="px-3 py-1 rounded-full text-[9px] font-black uppercase border bg-green-100 text-green-600 border-green-200">
+                        Selesai
+                      </span>
+                    @elseif ($task->employee_id)
                       <span
                         class="px-3 py-1 rounded-full text-[9px] font-black uppercase border bg-blue-100 text-blue-600 border-blue-200">
                         On Progress
