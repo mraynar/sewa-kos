@@ -76,26 +76,31 @@
                 </td>
                 <td class="px-6 py-4 text-center">
                   @php
-                    $badge_class = 'bg-amber-100 text-amber-800';
+                    $badge_class = 'bg-amber-100 text-amber-600 border border-amber-200';
+                    $status_text = 'Pending';
                     if ($report->status === 'done') {
-                        $badge_class = 'bg-green-100 text-green-800';
-                    }
-                    if ($report->status === 'on_progress') {
-                        $badge_class = 'bg-blue-100 text-blue-800';
+                        $badge_class = 'bg-emerald-100 text-emerald-600 border border-emerald-200';
+                        $status_text = 'Selesai';
+                    } elseif ($report->status === 'on_progress') {
+                        $badge_class = 'bg-blue-100 text-blue-600 border border-blue-200';
+                        $status_text = 'On Progress';
                     }
                   @endphp
-                  <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase {{ $badge_class }}">
-                    {{ str_replace('_', ' ', $report->status) }}
+                  <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase border {{ $badge_class }}">
+                    {{ $status_text }}
                   </span>
                 </td>
                 <td class="px-6 py-4 text-center">
                   @if ($report->status === 'pending')
                     <button onclick="openAssignModal({{ $report->id }})"
-                      class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold uppercase px-4 py-2 rounded-lg transition-all shadow-md">
+                      class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
                       Assign
                     </button>
                   @else
-                    <span class="text-gray-400 text-[10px] font-bold uppercase italic">Diteruskan</span>
+                    <div class="flex flex-col items-center">
+                      <span class="text-gray-400 text-[10px] font-bold uppercase italic">Diteruskan ke:</span>
+                      <span class="text-slate-800 text-[10px] font-black uppercase mt-0.5">{{ $report->employee->nickname ?? ($report->employee->name ?? '-') }}</span>
+                    </div>
                   @endif
                 </td>
               </tr>
