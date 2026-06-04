@@ -24,15 +24,29 @@ class PegawaiTaskController extends Controller
         if ($request->has('status') && $request->status !== '') {
             $status = $request->status;
             if ($status === 'pending') {
-                $query->whereNull('service_status');
+                $query->where(function ($q) {
+                    $q->whereNull('service_status')
+                        ->orWhere('service_status', 'pending');
+                });
             } else {
                 $query->where('service_status', $status);
             }
         }
 
+        // Category filter
+        if ($request->has('category') && $request->category !== '') {
+            $category = $request->category;
+            $query->whereHas('additionalService', function ($q) use ($category) {
+                $q->where('service_name', 'like', '%'.$category.'%');
+            });
+        }
+
         $tasks = $query->orderBy('created_at', 'desc')->get();
 
-        return view('pegawai.tasks', compact('tasks'));
+        $selectedStatus = $request->query('status', '');
+        $selectedCategory = $request->query('category', '');
+
+        return view('pegawai.tasks', compact('tasks', 'selectedStatus', 'selectedCategory'));
     }
 
     /**
