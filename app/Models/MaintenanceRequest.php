@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class MaintenanceRequest extends Model
 {
-    public $timestamps = false;
+    public $timestamps = true;
+
+    const UPDATED_AT = null;
 
     protected $table = 'maintenance_requests';
 
@@ -19,7 +22,7 @@ class MaintenanceRequest extends Model
         'location',
         'status',
         'employee_id',
-        'created_at'
+        'created_at',
     ];
 
     public function user()
@@ -35,5 +38,14 @@ class MaintenanceRequest extends Model
     public function employee()
     {
         return $this->belongsTo(User::class, 'employee_id');
+    }
+
+    /**
+     * Scope a query to only include maintenance requests for a specific employee that are pending or on progress.
+     */
+    public function scopePendingByEmployee(Builder $query, int $employeeId): Builder
+    {
+        return $query->where('employee_id', $employeeId)
+            ->whereIn('status', ['pending', 'on_progress']);
     }
 }
