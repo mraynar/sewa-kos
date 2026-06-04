@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
     });
 
-    Route::middleware(['auth', 'can:access-pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
+    Route::middleware('can:access-pegawai')->prefix('pegawai')->name('pegawai.')->group(function () {
         Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/tugas', [PegawaiTaskController::class, 'index'])->name('tasks.index');
