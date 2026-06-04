@@ -12,11 +12,11 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $selected_month = $request->input('month', date('n'));
-        $selected_year  = $request->input('year', date('Y'));
+        $selected_year = $request->input('year', date('Y'));
 
         $employees = User::where('role', 'pegawai')->get(['id', 'nickname']);
 
-        $reports = MaintenanceRequest::with('user')
+        $reports = MaintenanceRequest::with(['user', 'employee'])
             ->whereMonth('created_at', $selected_month)
             ->whereYear('created_at', $selected_year)
             ->latest()
@@ -35,7 +35,7 @@ class ReportController extends Controller
         $report = MaintenanceRequest::findOrFail($request->report_id);
         $report->update([
             'employee_id' => $request->worker_id,
-            'status' => 'on_progress'
+            'status' => 'on_progress',
         ]);
 
         return redirect()->back()->with('success', 'Laporan berhasil diteruskan ke pegawai!');
