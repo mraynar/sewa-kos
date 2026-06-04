@@ -139,14 +139,9 @@
                                                         </button>
                                                     </form>
                                                 @endif
-                                                <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="hidden" name="status" value="done">
-                                                    <button type="submit" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
-                                                        Selesai
-                                                    </button>
-                                                </form>
+                                                <button type="button" onclick="openConfirmModal('{{ route('pegawai.tasks.update', $task->id) }}')" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                    Selesai
+                                                </button>
                                             </div>
                                         @endif
                                     </td>
@@ -165,4 +160,58 @@
         </div>
     </div>
 </div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white rounded-3xl p-8 max-w-sm w-full border border-gray-100 shadow-xl transform transition-all scale-95 duration-300">
+        <div class="flex flex-col items-center text-center space-y-4">
+            <!-- Icon -->
+            <div class="p-4 bg-emerald-50 text-emerald-600 rounded-full">
+                <i class="fa-solid fa-circle-question text-3xl"></i>
+            </div>
+            <!-- Title -->
+            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Konfirmasi Selesai</h4>
+            <!-- Description -->
+            <p class="text-sm text-gray-500 font-medium leading-relaxed">Apakah Anda yakin tugas layanan ini telah selesai dikerjakan?</p>
+            
+            <!-- Actions -->
+            <div class="flex items-center gap-3 w-full pt-4">
+                <button type="button" onclick="closeConfirmModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black uppercase text-[10px] tracking-widest py-3 transition active:scale-95">
+                    Batal
+                </button>
+                <form id="confirmForm" method="POST" action="" class="flex-1">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" value="done">
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest py-3 transition active:scale-95">
+                        Ya, Selesai
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openConfirmModal(actionUrl) {
+        const modal = document.getElementById('confirmModal');
+        const form = document.getElementById('confirmForm');
+        form.action = actionUrl;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeConfirmModal() {
+        const modal = document.getElementById('confirmModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeConfirmModal();
+        }
+    });
+</script>
 @endsection
