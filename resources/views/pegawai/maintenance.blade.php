@@ -5,93 +5,108 @@
 @section('page_title', 'Laporan Kerusakan')
 
 @section('content')
-<div class="container mx-auto">
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 flex justify-between items-center" role="alert">
-            <span class="block sm:inline font-medium">{{ session('success') }}</span>
-            <button onclick="this.parentElement.style.display='none'" class="text-green-700 font-bold px-2 py-1 hover:text-green-900">&times;</button>
-        </div>
-    @endif
-
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 text-left">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Daftar Laporan Kerusakan</h1>
-            <p class="text-sm text-gray-500 mt-1">Daftar komplain dan laporan kerusakan fasilitas kos yang ditugaskan kepada Anda.</p>
-        </div>
-
-        <form method="GET" action="{{ route('pegawai.maintenance.index') }}" class="flex items-center gap-3 bg-white p-2 rounded-lg shadow border border-gray-200">
-            <div class="flex items-center gap-2 px-2">
-                <i class="fas fa-filter text-blue-500"></i>
-                <select name="status" onchange="this.form.submit()" class="text-sm font-semibold text-gray-700 bg-transparent outline-none cursor-pointer">
-                    <option value="" {{ request('status') === null || request('status') === '' ? 'selected' : '' }}>Semua Status</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="on_progress" {{ request('status') === 'on_progress' ? 'selected' : '' }}>Sedang Dikerjakan</option>
-                    <option value="done" {{ request('status') === 'done' ? 'selected' : '' }}>Selesai</option>
-                </select>
-            </div>
-        </form>
+<div class="space-y-8 text-left">
+    <!-- Header Title -->
+    <div>
+        <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">Laporan Kerusakan & Rutin</h1>
+        <p class="text-sm text-gray-500 mt-1">Kelola perbaikan kerusakan fasilitas dari penyewa serta pemeliharaan rutin kos.</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">Lokasi</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">Pelapor</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">Keluhan</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase text-center">Foto</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase text-center">Status</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse ($reports as $report)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 text-left">
-                                <span class="font-bold text-gray-900 block">{{ $report->location }}</span>
-                                <span class="text-xs text-gray-500">Kamar: {{ $report->booking->room->room_number ?? 'N/A' }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 font-medium uppercase text-left">
-                                {{ $report->user->nickname ?? ($report->user->name ?? 'Unknown') }}
-                            </td>
-                            <td class="px-6 py-4 text-left">
-                                <p class="text-sm font-bold text-gray-800">{{ $report->issue_name }}</p>
-                                <p class="text-xs text-gray-500 truncate max-w-[250px]">{{ $report->description }}</p>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                @if ($report->photo)
-                                    <button onclick="openPhotoModal('{{ asset('assets/img/reports/' . $report->photo) }}')" class="text-blue-500 hover:text-blue-700 transition duration-200 active:scale-90">
-                                        <i class="fas fa-image text-lg"></i>
-                                    </button>
-                                @else
-                                    <span class="text-gray-300 italic text-xs">No Photo</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                @php
-                                    $badge_class = 'bg-amber-100 text-amber-800';
-                                    if ($report->status === 'done') {
-                                        $badge_class = 'bg-green-100 text-green-800';
-                                    } elseif ($report->status === 'on_progress') {
-                                        $badge_class = 'bg-blue-100 text-blue-800';
-                                    }
-                                @endphp
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase {{ $badge_class }}">
-                                    {{ str_replace('_', ' ', $report->status) }}
+    <!-- Tab Switcher & Status Filter Wrapper -->
+    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 space-y-6">
+        <!-- Tab Switcher -->
+        <div class="flex border-b border-gray-100">
+            <a href="{{ route('pegawai.maintenance.index', array_merge(request()->query(), ['tab' => 'kerusakan'])) }}" class="py-4 px-6 border-b-2 font-black uppercase text-[10px] tracking-widest transition {{ $activeTab === 'kerusakan' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-slate-800' }}">
+                <i class="fa-solid fa-screwdriver-wrench mr-2"></i> Laporan Kerusakan
+            </a>
+            <a href="{{ route('pegawai.maintenance.index', array_merge(request()->query(), ['tab' => 'rutin'])) }}" class="py-4 px-6 border-b-2 font-black uppercase text-[10px] tracking-widest transition {{ $activeTab === 'rutin' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-slate-800' }}">
+                <i class="fa-solid fa-calendar-check mr-2"></i> Pemeliharaan Rutin
+            </a>
+        </div>
+
+        <!-- Status Filter (Pill Tabs) -->
+        <div class="space-y-2">
+            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Filter Status</span>
+            <div class="flex flex-wrap gap-2">
+                @php
+                    $statusFilters = [
+                        '' => 'Semua Status',
+                        'pending' => 'Pending',
+                        'on_progress' => 'Sedang Dikerjakan',
+                        'done' => 'Selesai',
+                    ];
+                @endphp
+                @foreach ($statusFilters as $val => $label)
+                    @php
+                        $isActive = request('status') === $val || (request('status') === null && $val === '');
+                        $url = route('pegawai.maintenance.index', array_merge(request()->query(), ['status' => $val]));
+                    @endphp
+                    <a href="{{ $url }}" class="inline-block text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-2xl transition active:scale-95 {{ $isActive ? 'bg-blue-600 text-white' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/50' }}">
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Content Area -->
+    <div class="space-y-4">
+        <div class="flex items-center gap-2">
+            <div class="w-1.5 h-5 bg-blue-600 rounded-full"></div>
+            <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">
+                {{ $activeTab === 'rutin' ? 'Pemeliharaan Rutin' : 'Komplain Kerusakan' }}
+            </h3>
+        </div>
+
+        @if (count($reports) > 0)
+            @if ($activeTab === 'rutin')
+                <!-- Routine Card Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    @foreach ($reports as $report)
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between space-y-4">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[9px] font-black bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg border border-blue-100 uppercase">
+                                        Rutin
+                                    </span>
+                                    @php
+                                        $badge_class = 'bg-amber-100 text-amber-600 border border-amber-200';
+                                        if ($report->status === 'done') {
+                                            $badge_class = 'bg-emerald-100 text-emerald-600 border border-emerald-200';
+                                        } elseif ($report->status === 'on_progress') {
+                                            $badge_class = 'bg-blue-100 text-blue-600 border border-blue-200';
+                                        }
+                                    @endphp
+                                    <span class="px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase {{ $badge_class }}">
+                                        {{ str_replace('_', ' ', $report->status) }}
+                                    </span>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-black text-slate-800 text-base leading-tight">{{ $report->issue_name }}</h4>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tight mt-1"><i class="fa-solid fa-location-dot mr-1"></i> {{ $report->location }}</p>
+                                </div>
+                                
+                                <p class="text-xs text-gray-500 font-medium leading-relaxed">{{ $report->description }}</p>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                                <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                    {{ \Carbon\Carbon::parse($report->created_at)->translatedFormat('d M Y') }}
                                 </span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
+                                
                                 @if ($report->status === 'done')
-                                    <span class="text-xs text-emerald-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</span>
+                                    <span class="text-xs text-emerald-600 font-bold inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-check"></i> Selesai
+                                    </span>
                                 @else
-                                    <div class="flex items-center justify-center gap-2">
+                                    <div class="flex gap-2">
                                         @if ($report->status === 'pending')
                                             <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
                                                 @csrf
                                                 @method('PUT')
                                                 <input type="hidden" name="status" value="on_progress">
-                                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg transition duration-200">
+                                                <button type="submit" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[9px] tracking-widest active:scale-95 px-3 py-1.5">
                                                     Proses
                                                 </button>
                                             </form>
@@ -100,32 +115,121 @@
                                             @csrf
                                             @method('PUT')
                                             <input type="hidden" name="status" value="done">
-                                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg transition duration-200">
+                                            <button type="submit" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[9px] tracking-widest active:scale-95 px-3 py-1.5">
                                                 Selesai
                                             </button>
                                         </form>
                                     </div>
                                 @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-16 text-center text-gray-500">
-                                Laporan kerusakan tidak ditemukan.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <!-- Damage Report Table -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-100 bg-slate-50/50">
+                                    <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5">Lokasi & Kamar</th>
+                                    <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5">Pelapor</th>
+                                    <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5">Keluhan</th>
+                                    <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5 text-center">Foto</th>
+                                    <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5 text-center">Status</th>
+                                    <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($reports as $report)
+                                    <tr class="hover:bg-blue-50/30 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-col">
+                                                <span class="font-black text-slate-800 text-sm">{{ $report->location }}</span>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight mt-0.5">Kamar: {{ $report->booking->room->room_number ?? 'N/A' }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-xs font-bold text-slate-600 uppercase">
+                                            {{ $report->user->nickname ?? ($report->user->name ?? 'Unknown') }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-col">
+                                                <span class="font-black text-slate-800 text-sm">{{ $report->issue_name }}</span>
+                                                <p class="text-xs text-gray-500 truncate max-w-[250px] font-medium mt-1">{{ $report->description }}</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            @if ($report->photo)
+                                                <button onclick="openPhotoModal('{{ asset('assets/img/reports/' . $report->photo) }}')" class="p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition active:scale-95">
+                                                    <i class="fas fa-image text-base"></i>
+                                                </button>
+                                            @else
+                                                <span class="text-[10px] font-black text-gray-300 uppercase tracking-wider italic">No Photo</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            @php
+                                                $badge_class = 'bg-amber-100 text-amber-600 border border-amber-200';
+                                                if ($report->status === 'done') {
+                                                    $badge_class = 'bg-emerald-100 text-emerald-600 border border-emerald-200';
+                                                } elseif ($report->status === 'on_progress') {
+                                                    $badge_class = 'bg-blue-100 text-blue-600 border border-blue-200';
+                                                }
+                                            @endphp
+                                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase {{ $badge_class }}">
+                                                {{ str_replace('_', ' ', $report->status) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            @if ($report->status === 'done')
+                                                <span class="text-xs text-emerald-600 font-bold inline-flex items-center gap-1">
+                                                    <i class="fa-solid fa-circle-check"></i> Selesai
+                                                </span>
+                                            @else
+                                                <div class="flex items-center justify-center gap-2">
+                                                    @if ($report->status === 'pending')
+                                                        <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <input type="hidden" name="status" value="on_progress">
+                                                            <button type="submit" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                                Proses
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                    <form method="POST" action="{{ route('pegawai.maintenance.update', $report->id) }}" class="inline">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="status" value="done">
+                                                        <button type="submit" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                            Selesai
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        @else
+            <!-- Empty State -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 py-16 flex flex-col items-center justify-center">
+                <i class="fa-solid fa-folder-open text-4xl text-slate-100 mb-3"></i>
+                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tidak ada laporan ditemukan</span>
+            </div>
+        @endif
     </div>
 </div>
 
 <!-- Photo Modal -->
-<div id="photoModal" class="fixed inset-0 bg-black/80 hidden justify-center items-center z-[60] backdrop-blur-sm p-4" onclick="closePhotoModal()">
-    <div class="relative max-w-4xl w-full flex justify-center" onclick="event.stopPropagation()">
+<div id="photoModal" class="fixed inset-0 bg-slate-900/80 hidden justify-center items-center z-[60] backdrop-blur-sm p-4" onclick="closePhotoModal()">
+    <div class="relative max-w-4xl w-full flex justify-center animate-scale-up" onclick="event.stopPropagation()">
         <button onclick="closePhotoModal()" class="absolute -top-12 right-0 text-white text-3xl hover:text-gray-300 transition-all">&times;</button>
-        <img id="modalImg" src="" class="rounded-2xl shadow-2xl max-h-[80vh] w-auto object-contain border-4 border-white/10">
+        <img id="modalImg" src="" class="rounded-3xl shadow-2xl max-h-[80vh] w-auto object-contain border border-white/10">
     </div>
 </div>
 
