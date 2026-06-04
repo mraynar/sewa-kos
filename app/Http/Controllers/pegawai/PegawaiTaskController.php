@@ -34,4 +34,24 @@ class PegawaiTaskController extends Controller
 
         return view('pegawai.tasks', compact('tasks'));
     }
+
+    /**
+     * Update the status of the assigned task.
+     */
+    public function updateStatus(Request $request, int $id): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'status' => 'required|in:on_progress,done',
+        ]);
+
+        $task = BookingService::where('id', $id)
+            ->where('employee_id', Auth::id())
+            ->firstOrFail();
+
+        $task->update([
+            'service_status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Status tugas berhasil diperbarui!');
+    }
 }
