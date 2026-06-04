@@ -16,7 +16,7 @@ class ReportController extends Controller
 
         $employees = User::where('role', 'pegawai')->get(['id', 'nickname']);
 
-        $reports = MaintenanceRequest::with(['user', 'employee'])
+        $reports = MaintenanceRequest::with(['user', 'employee', 'booking.room'])
             ->whereMonth('created_at', $selected_month)
             ->whereYear('created_at', $selected_year)
             ->latest()
