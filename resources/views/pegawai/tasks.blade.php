@@ -153,7 +153,7 @@
             @else
                 <!-- Empty State -->
                 <div class="flex flex-col items-center justify-center py-16">
-                    <i class="fa-solid fa-folder-open text-4xl text-slate-200 mb-3"></i>
+                    <i class="fa-solid fa-folder-open text-4xl text-slate-100 mb-3"></i>
                     <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tidak ada tugas ditemukan</span>
                 </div>
             @endif
