@@ -16,9 +16,16 @@ class PegawaiMaintenanceController extends Controller
     public function index(Request $request): View
     {
         $employeeId = Auth::id();
+        $activeTab = $request->input('tab', 'kerusakan');
 
         $query = MaintenanceRequest::with(['user', 'booking.room'])
             ->where('employee_id', $employeeId);
+
+        if ($activeTab === 'rutin') {
+            $query->whereNull('booking_id');
+        } else {
+            $query->whereNotNull('booking_id');
+        }
 
         // Status filter
         if ($request->has('status') && $request->status !== '') {
@@ -27,7 +34,7 @@ class PegawaiMaintenanceController extends Controller
 
         $reports = $query->orderBy('created_at', 'desc')->get();
 
-        return view('pegawai.maintenance', compact('reports'));
+        return view('pegawai.maintenance', compact('reports', 'activeTab'));
     }
 
     /**
