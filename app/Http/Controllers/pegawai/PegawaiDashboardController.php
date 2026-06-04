@@ -39,13 +39,32 @@ class PegawaiDashboardController extends Controller
             ->where('status', 'done')
             ->count();
 
+        // Reusable count stats for 3-col display
+        $activeTasksCount = $pendingTasks;
+        $activeMaintenanceCount = $pendingMaintenance;
+        $completedCount = $completedTasks + $completedMaintenance;
+
+        // Upcoming Tasks list
+        $upcomingTasks = BookingService::with(['booking.room', 'booking.user', 'additionalService'])
+            ->where('employee_id', $employeeId)
+            ->where(function ($query) {
+                $query->whereNull('service_status')
+                    ->orWhere('service_status', 'on_progress');
+            })
+            ->orderBy('created_at', 'asc')
+            ->get();
+
         return view('pegawai.dashboard', compact(
             'totalTasks',
             'pendingTasks',
             'completedTasks',
             'totalMaintenance',
             'pendingMaintenance',
-            'completedMaintenance'
+            'completedMaintenance',
+            'activeTasksCount',
+            'activeMaintenanceCount',
+            'completedCount',
+            'upcomingTasks'
         ));
     }
 }
