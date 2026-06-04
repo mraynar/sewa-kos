@@ -29,4 +29,24 @@ class PegawaiMaintenanceController extends Controller
 
         return view('pegawai.maintenance', compact('reports'));
     }
+
+    /**
+     * Update the status of the assigned maintenance request.
+     */
+    public function updateStatus(Request $request, int $id): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'status' => 'required|in:on_progress,done',
+        ]);
+
+        $report = MaintenanceRequest::where('id', $id)
+            ->where('employee_id', Auth::id())
+            ->firstOrFail();
+
+        $report->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Status laporan kerusakan berhasil diperbarui!');
+    }
 }
