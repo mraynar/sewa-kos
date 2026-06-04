@@ -11,13 +11,13 @@ use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\auth\AuthController;
 use App\Http\Controllers\auth\ForgotPasswordController;
 use App\Http\Controllers\auth\SocialAuthController;
+use App\Http\Controllers\pegawai\PegawaiDashboardController;
 use App\Http\Controllers\pegawai\PegawaiMaintenanceController;
 use App\Http\Controllers\pegawai\PegawaiProfileController;
 use App\Http\Controllers\pegawai\PegawaiTaskController;
 use App\Http\Controllers\penyewa\PenyewaController;
 use App\Http\Controllers\penyewa\TransactionController;
 use App\Http\Controllers\TaskController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PenyewaController::class, 'index'])->name('home');
@@ -92,17 +92,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware(['auth', 'can:access-pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
-        Route::get('/dashboard', function () {
-            $user = Auth::user();
-
-            return '
-                <h1>Dashboard Pegawai</h1>
-                <p>Halo '.$user->nickname.', Anda login sebagai Pegawai.</p>
-                <form action="'.route('logout').'" method="POST">
-                    '.csrf_field().'
-                    <button type="submit" style="color:red;font-weight:bold;cursor:pointer;">LOGOUT</button>
-                </form>';
-        })->name('dashboard');
+        Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/tugas', [PegawaiTaskController::class, 'index'])->name('tasks.index');
         Route::put('/tugas/{id}/status', [PegawaiTaskController::class, 'updateStatus'])->name('tasks.update');
