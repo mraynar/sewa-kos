@@ -5,117 +5,163 @@
 @section('page_title', 'Tugas Layanan')
 
 @section('content')
-<div class="container mx-auto">
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 flex justify-between items-center" role="alert">
-            <span class="block sm:inline font-medium">{{ session('success') }}</span>
-            <button onclick="this.parentElement.style.display='none'" class="text-green-700 font-bold px-2 py-1 hover:text-green-900">&times;</button>
-        </div>
-    @endif
-
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 text-left">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Daftar Tugas Layanan</h1>
-            <p class="text-sm text-gray-500 mt-1">Daftar tugas layanan tambahan kamar kos yang didelegasikan untuk Anda.</p>
-        </div>
-
-        <form method="GET" action="{{ route('pegawai.tasks.index') }}" class="flex items-center gap-3 bg-white p-2 rounded-lg shadow border border-gray-200">
-            <div class="flex items-center gap-2 px-2">
-                <i class="fas fa-filter text-blue-500"></i>
-                <select name="status" onchange="this.form.submit()" class="text-sm font-semibold text-gray-700 bg-transparent outline-none cursor-pointer">
-                    <option value="" {{ request('status') === null || request('status') === '' ? 'selected' : '' }}>Semua Status</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Belum Dikerjakan</option>
-                    <option value="on_progress" {{ request('status') === 'on_progress' ? 'selected' : '' }}>Sedang Dikerjakan</option>
-                    <option value="done" {{ request('status') === 'done' ? 'selected' : '' }}>Selesai</option>
-                </select>
-            </div>
-        </form>
+<div class="space-y-8 text-left">
+    <!-- Header Title -->
+    <div>
+        <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">Daftar Tugas Layanan</h1>
+        <p class="text-sm text-gray-500 mt-1">Kelola dan selesaikan semua tugas layanan tambahan yang ditugaskan kepada Anda.</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">No</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">Layanan</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">Kamar</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase">Penyewa</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase text-center">Jumlah</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase text-center">Status</th>
-                        <th class="px-6 py-3 text-xs font-semibold text-gray-600 uppercase text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse ($tasks as $index => $task)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $index + 1 }}</td>
-                            <td class="px-6 py-4">
-                                <p class="text-sm font-bold text-gray-800">{{ $task->additionalService->name ?? 'Layanan' }}</p>
-                                <p class="text-xs text-gray-500">Rp {{ number_format($task->price_at_purchase, 0, ',', '.') }}</p>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 font-semibold">
-                                {{ $task->booking->room->room_number ?? 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 font-medium uppercase">
-                                {{ $task->booking->user->nickname ?? ($task->booking->user->name ?? 'Unknown') }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 text-center font-semibold">
-                                {{ $task->quantity }}
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                @php
-                                    $badge_class = 'bg-amber-100 text-amber-800';
-                                    $status_text = 'Belum Dikerjakan';
-                                    
-                                    if ($task->service_status === 'done') {
-                                        $badge_class = 'bg-green-100 text-green-800';
-                                        $status_text = 'Selesai';
-                                    } elseif ($task->service_status === 'on_progress') {
-                                        $badge_class = 'bg-blue-100 text-blue-800';
-                                        $status_text = 'Sedang Dikerjakan';
-                                    }
-                                @endphp
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase {{ $badge_class }}">
-                                    {{ $status_text }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                @if ($task->service_status === 'done')
-                                    <span class="text-xs text-emerald-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Selesai</span>
-                                @else
-                                    <div class="flex items-center justify-center gap-2">
-                                        @if ($task->service_status === 'pending' || is_null($task->service_status))
-                                            <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="hidden" name="status" value="on_progress">
-                                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg transition duration-200">
-                                                    Mulai
-                                                </button>
-                                            </form>
+    <!-- Filter Section (Pill Tabs) -->
+    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 space-y-6">
+        <!-- Status Filters -->
+        <div class="space-y-2">
+            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Status Tugas</span>
+            <div class="flex flex-wrap gap-2">
+                @php
+                    $statusFilters = [
+                        '' => 'Semua Status',
+                        'pending' => 'Belum Dikerjakan',
+                        'on_progress' => 'Sedang Dikerjakan',
+                        'done' => 'Selesai',
+                    ];
+                @endphp
+                @foreach ($statusFilters as $val => $label)
+                    @php
+                        $isActive = request('status') === $val || (request('status') === null && $val === '');
+                        $url = route('pegawai.tasks.index', array_merge(request()->query(), ['status' => $val]));
+                    @endphp
+                    <a href="{{ $url }}" class="inline-block text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-2xl transition active:scale-95 {{ $isActive ? 'bg-blue-600 text-white' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/50' }}">
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="space-y-2">
+            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Kategori Layanan</span>
+            <div class="flex flex-wrap gap-2">
+                @php
+                    $categoryFilters = [
+                        '' => 'Semua Kategori',
+                        'Catering' => 'Catering',
+                        'Laundry' => 'Laundry',
+                        'Cleaning' => 'Cleaning',
+                    ];
+                @endphp
+                @foreach ($categoryFilters as $val => $label)
+                    @php
+                        $isActive = request('category') === $val || (request('category') === null && $val === '');
+                        $url = route('pegawai.tasks.index', array_merge(request()->query(), ['category' => $val]));
+                    @endphp
+                    <a href="{{ $url }}" class="inline-block text-[10px] font-black uppercase tracking-wider px-4 py-2.5 rounded-2xl transition active:scale-95 {{ $isActive ? 'bg-blue-600 text-white' : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/50' }}">
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="space-y-4">
+        <div class="flex items-center gap-2">
+            <div class="w-1.5 h-5 bg-blue-600 rounded-full"></div>
+            <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Daftar Pekerjaan</h3>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            @if (count($tasks) > 0)
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-100 bg-slate-50/50">
+                                <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5">No.</th>
+                                <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5">Kamar & Tamu</th>
+                                <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5">Jenis Layanan</th>
+                                <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5 text-center">Jumlah</th>
+                                <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5 text-center">Status</th>
+                                <th class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-6 py-5 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach ($tasks as $index => $task)
+                                <tr class="hover:bg-blue-50/30 transition-colors">
+                                    <td class="px-6 py-4 text-xs font-bold text-slate-400">{{ $index + 1 }}</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="font-black text-slate-800 text-sm">Kamar {{ $task->booking->room->room_number ?? 'N/A' }}</span>
+                                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">{{ $task->booking->user->nickname ?? ($task->booking->user->name ?? 'Unknown') }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 uppercase self-start">
+                                                {{ $task->additionalService->service_name ?? 'Layanan' }}
+                                            </span>
+                                            <span class="text-[10px] font-semibold text-gray-400 mt-1">Rp {{ number_format($task->price_at_purchase, 0, ',', '.') }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-bold text-slate-700 text-sm">
+                                        {{ $task->quantity }}
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        @php
+                                            $badge_class = 'bg-amber-100 text-amber-600 border border-amber-200';
+                                            $status_text = 'Belum Dikerjakan';
+                                            
+                                            if ($task->service_status === 'done') {
+                                                $badge_class = 'bg-emerald-100 text-emerald-600 border border-emerald-200';
+                                                $status_text = 'Selesai';
+                                            } elseif ($task->service_status === 'on_progress') {
+                                                $badge_class = 'bg-blue-100 text-blue-600 border border-blue-200';
+                                                $status_text = 'Sedang Dikerjakan';
+                                            }
+                                        @endphp
+                                        <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase {{ $badge_class }}">
+                                            {{ $status_text }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        @if ($task->service_status === 'done')
+                                            <span class="text-xs text-emerald-600 font-bold inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-circle-check"></i> Selesai
+                                            </span>
+                                        @else
+                                            <div class="flex items-center justify-center gap-2">
+                                                @if ($task->service_status === 'pending' || is_null($task->service_status))
+                                                    <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="status" value="on_progress">
+                                                        <button type="submit" class="bg-blue-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                            Mulai
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="done">
+                                                    <button type="submit" class="bg-emerald-600 hover:bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 px-4 py-2">
+                                                        Selesai
+                                                    </button>
+                                                </form>
+                                            </div>
                                         @endif
-                                        <form method="POST" action="{{ route('pegawai.tasks.update', $task->id) }}" class="inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="hidden" name="status" value="done">
-                                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg transition duration-200">
-                                                Selesai
-                                            </button>
-                                        </form>
-                                    </div>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-16 text-center text-gray-500">
-                                Tidak ada tugas yang ditemukan.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <!-- Empty State -->
+                <div class="flex flex-col items-center justify-center py-16">
+                    <i class="fa-solid fa-folder-open text-4xl text-slate-200 mb-3"></i>
+                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tidak ada tugas ditemukan</span>
+                </div>
+            @endif
         </div>
     </div>
 </div>
