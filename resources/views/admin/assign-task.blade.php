@@ -143,10 +143,10 @@
                   <td class="px-6 py-4 text-center">
                     @if ($task->service_status === 'done')
                       <span
-                        class="px-3 py-1 rounded-full text-[9px] font-black uppercase border bg-green-100 text-green-600 border-green-200">
+                        class="px-3 py-1 rounded-full text-[9px] font-black uppercase border bg-emerald-100 text-emerald-600 border-emerald-200">
                         Selesai
                       </span>
-                    @elseif ($task->employee_id)
+                    @elseif ($task->service_status === 'on_progress')
                       <span
                         class="px-3 py-1 rounded-full text-[9px] font-black uppercase border bg-blue-100 text-blue-600 border-blue-200">
                         On Progress
