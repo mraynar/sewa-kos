@@ -73,8 +73,8 @@
             </h3>
         </div>
 
-        @if (count($reports) > 0)
-            @if ($activeTab === 'rutin')
+        @if ($activeTab === 'rutin')
+            @if (count($reports) > 0)
                 <!-- Routine Card Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @foreach ($reports as $report)
@@ -131,6 +131,14 @@
                     @endforeach
                 </div>
             @else
+                <!-- Empty State Rutin -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 py-16 flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-calendar-check text-4xl text-slate-200 mb-3"></i>
+                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tidak ada jadwal pemeliharaan rutin</span>
+                </div>
+            @endif
+        @else
+            @if (count($reports) > 0)
                 <!-- Damage Report Table -->
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="overflow-x-auto">
@@ -209,13 +217,13 @@
                         </table>
                     </div>
                 </div>
+            @else
+                <!-- Empty State Kerusakan -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 py-16 flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-screwdriver-wrench text-4xl text-slate-200 mb-3"></i>
+                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tidak ada komplain kerusakan fasilitas</span>
+                </div>
             @endif
-        @else
-            <!-- Empty State -->
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 py-16 flex flex-col items-center justify-center">
-                <i class="fa-solid fa-folder-open text-4xl text-slate-100 mb-3"></i>
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tidak ada laporan ditemukan</span>
-            </div>
         @endif
     </div>
 </div>
