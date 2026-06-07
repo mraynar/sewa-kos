@@ -56,7 +56,8 @@
                             class="px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs font-semibold text-center border border-emerald-100">
                             <i class="fas fa-check-circle mr-1"></i> Lunas
                         </span>
-                        <a href="#"
+                        <a href="{{ route('transactions.receipt', $booking->id) }}"
+                            target="_blank"
                             class="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold text-center hover:bg-black transition-all">
                             <i class="fas fa-print mr-1"></i> Unduh Nota
                         </a>
