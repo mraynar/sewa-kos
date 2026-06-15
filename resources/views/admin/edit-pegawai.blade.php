@@ -40,29 +40,45 @@
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700 ml-1">Nama Panggilan</label>
               <input type="text" name="nickname" required
-                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all"
+                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all
+                @error('nickname') border-red-300 @enderror"
                 value="{{ old('nickname', $pegawai->nickname) }}">
+              @error('nickname')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700 ml-1">Nomor WhatsApp</label>
               <input type="text" name="phone" required
-                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all"
+                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all
+                @error('phone') border-red-300 @enderror"
                 value="{{ old('phone', $pegawai->phone) }}">
+              @error('phone')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700 ml-1">Email Login</label>
               <input type="email" name="email" required
-                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all"
+                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all
+                @error('email') border-red-300 @enderror"
                 value="{{ old('email', $pegawai->email) }}">
+              @error('email')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="space-y-2">
               <label class="text-sm font-bold text-gray-700 ml-1">Reset Password (Opsional)</label>
               <input type="password" name="password"
-                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all placeholder:text-gray-300"
+                class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all placeholder:text-gray-300
+                @error('password') border-red-300 @enderror"
                 placeholder="Kosongkan jika tidak ingin ganti">
+              @error('password')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+              @enderror
             </div>
 
           </div>

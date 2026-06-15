@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('additional_services', function (Blueprint $table) {
             $table->id();
-            $table->string('service_name'); 
+            $table->string('service_name');
 
             $table->enum('duration_type', ['Harian', 'Mingguan', 'Bulanan'])->default('Mingguan');
 

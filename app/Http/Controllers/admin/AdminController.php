@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Room;
 use App\Models\Booking;
+use App\Models\Room;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -72,8 +72,8 @@ class AdminController extends Controller
             ->get();
 
         $pie_labels = $roomStats->pluck('type_name')->toArray();
-        $pie_series = $roomStats->pluck('total_rooms')->map(fn($val) => (int)$val)->toArray();
-        $pie_sisa = $roomStats->pluck('available_rooms')->map(fn($val) => (int)$val)->toArray();
+        $pie_series = $roomStats->pluck('total_rooms')->map(fn ($val) => (int) $val)->toArray();
+        $pie_sisa = $roomStats->pluck('available_rooms')->map(fn ($val) => (int) $val)->toArray();
 
         return view('admin.index', compact(
             'properti',

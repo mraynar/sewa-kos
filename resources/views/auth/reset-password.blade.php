@@ -55,7 +55,7 @@
                         </button>
                     </div>
                     @error('password')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -70,6 +70,9 @@
                             <i class="fas fa-eye text-sm"></i>
                         </button>
                     </div>
+                    @error('password_confirmation')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <button type="submit"

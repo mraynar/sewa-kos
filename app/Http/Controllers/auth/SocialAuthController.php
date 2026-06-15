@@ -32,17 +32,17 @@ class SocialAuthController extends Controller
         if ($user) {
             $user->update([
                 'google_id' => $googleUser->getId(),
-                'avatar'    => $googleUser->getAvatar(),
+                'avatar' => $googleUser->getAvatar(),
             ]);
         } else {
             $user = User::create([
-                'name'      => $googleUser->getName(),
-                'nickname'  => $googleUser->getName(),
-                'email'     => $googleUser->getEmail(),
+                'name' => $googleUser->getName(),
+                'nickname' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
-                'avatar'    => $googleUser->getAvatar(),
-                'role'      => 'penyewa',
-                'password'  => bcrypt(Str::random(24)),
+                'avatar' => $googleUser->getAvatar(),
+                'role' => 'penyewa',
+                'password' => bcrypt(Str::random(24)),
             ]);
         }
 

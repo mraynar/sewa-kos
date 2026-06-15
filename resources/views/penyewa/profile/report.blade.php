@@ -37,6 +37,9 @@
                             <i class="fas fa-chevron-down text-[10px]"></i>
                         </div>
                     </div>
+                    @error('booking_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Masa Aktif Sewa</label>
@@ -53,13 +56,21 @@
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Subjek Permasalahan</label>
                     <input type="text" name="issue_name" value="{{ old('issue_name') }}" required
                         placeholder="Contoh: AC tidak dingin, Lampu kamar mandi mati"
-                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all">
+                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all
+                        @error('issue_name') border-red-300 @enderror">
+                    @error('issue_name')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Deskripsi Kerusakan</label>
                     <textarea name="description" required rows="4"
                         placeholder="Mohon jelaskan kendala Anda agar teknisi kami dapat menyiapkan peralatan yang tepat..."
-                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all resize-none">{{ old('description') }}</textarea>
+                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all resize-none
+                        @error('description') border-red-300 @enderror">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Foto Bukti <span
@@ -67,6 +78,9 @@
                     <input type="file" name="issue_photo" accept="image/*" capture="camera"
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all
                         file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90 cursor-pointer">
+                    @error('issue_photo')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
         </div>

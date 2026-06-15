@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('gender_type', ['Putra', 'Putri']);
             $table->integer('price');
             $table->decimal('rating', 2, 1)->default(0.0);
-            $table->text('facilities'); 
+            $table->text('facilities');
             $table->string('area_size');
             $table->boolean('is_electric_included')->default(false);
             $table->boolean('is_water_included')->default(true);

@@ -79,6 +79,9 @@
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Nama Lengkap</label>
                     <input type="text" name="name" value="{{ old('name', $user->name) }}" required placeholder="Nama Lengkap Anda"
                            class="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-4 text-sm font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition duration-200">
+                    @error('name')
+                        <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Nickname -->
@@ -86,6 +89,9 @@
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Nama Panggilan</label>
                     <input type="text" name="nickname" value="{{ old('nickname', $user->nickname) }}" required placeholder="Nama Panggilan"
                            class="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-4 text-sm font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition duration-200">
+                    @error('nickname')
+                        <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Email -->
@@ -93,13 +99,19 @@
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Email</label>
                     <input type="email" name="email" value="{{ old('email', $user->email) }}" required placeholder="Alamat Email"
                            class="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-4 text-sm font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition duration-200">
+                    @error('email')
+                        <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Nomor HP -->
                 <div class="space-y-2">
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Nomor HP</label>
-                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" required placeholder="Nomor Telepon Aktif"
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" required placeholder="Nomor Telepon Akif"
                            class="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-4 text-sm font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition duration-200">
+                    @error('phone')
+                        <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Jenis Kelamin -->
@@ -110,6 +122,9 @@
                         <option value="Laki-laki" {{ old('gender', $user->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="Perempuan" {{ old('gender', $user->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
+                    @error('gender')
+                        <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Tanggal Lahir -->
@@ -117,6 +132,9 @@
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Tanggal Lahir</label>
                     <input type="date" name="birth_date" value="{{ old('birth_date', $user->birth_date) }}" required
                            class="w-full bg-slate-50 border border-transparent rounded-2xl px-5 py-4 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition duration-200">
+                    @error('birth_date')
+                        <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -133,6 +151,9 @@
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Password Baru</label>
                         <input type="password" name="new_password" placeholder="Biarkan kosong jika tidak ganti"
                                class="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition duration-200">
+                        @error('new_password')
+                            <p class="text-red-500 text-sm mt-1 ml-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     
                     <div class="space-y-2">

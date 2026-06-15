@@ -24,11 +24,14 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="room_type_id" required>
               <option selected disabled>-- Pilih Tipe Kamar --</option>
-              <option value="1">Hemat</option>
-              <option value="2">Santai</option>
-              <option value="3">Nyaman</option>
-              <option value="4">Luas</option>
+              <option value="1" {{ old('room_type_id') == 1 ? 'selected' : '' }}>Hemat</option>
+              <option value="2" {{ old('room_type_id') == 2 ? 'selected' : '' }}>Santai</option>
+              <option value="3" {{ old('room_type_id') == 3 ? 'selected' : '' }}>Nyaman</option>
+              <option value="4" {{ old('room_type_id') == 4 ? 'selected' : '' }}>Luas</option>
             </select>
+            @error('room_type_id')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
@@ -37,30 +40,42 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="gender_type" required>
               <option selected disabled>-- Pilih Tipe Gender --</option>
-              <option value="Putra">Putra</option>
-              <option value="Putri">Putri</option>
+              <option value="Putra" {{ old('gender_type') == 'Putra' ? 'selected' : '' }}>Putra</option>
+              <option value="Putri" {{ old('gender_type') == 'Putri' ? 'selected' : '' }}>Putri</option>
             </select>
+            @error('gender_type')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Harga</label>
-            <input type="number" placeholder="Contoh : 350000"
+            <input type="number" placeholder="Contoh : 350000" value="{{ old('price') }}"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="price" required>
+            @error('price')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Fasilitas</label>
-            <input type="text" placeholder="Contoh : Bed, Lemari, Meja Belajar"
+            <input type="text" placeholder="Contoh : Bed, Lemari, Meja Belajar" value="{{ old('facilities') }}"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="facilities" required>
+            @error('facilities')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Ukuran Kamar (m)</label>
-            <input type="text" placeholder="Contoh : 4x6"
+            <input type="text" placeholder="Contoh : 4x6" value="{{ old('area_size') }}"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="area_size" required>
+            @error('area_size')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
@@ -69,9 +84,12 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="is_electric_included" required>
               <option selected disabled>-- Pilih --</option>
-              <option value="0">Token</option>
-              <option value="1">Include</option>
+              <option value="0" {{ old('is_electric_included') === '0' ? 'selected' : '' }}>Token</option>
+              <option value="1" {{ old('is_electric_included') === '1' ? 'selected' : '' }}>Include</option>
             </select>
+            @error('is_electric_included')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
@@ -80,15 +98,21 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="is_water_included" required>
               <option selected disabled>-- Pilih --</option>
-              <option value="0">Tidak Ada</option>
-              <option value="1">Include</option>
+              <option value="0" {{ old('is_water_included') === '0' ? 'selected' : '' }}>Tidak Ada</option>
+              <option value="1" {{ old('is_water_included') === '1' ? 'selected' : '' }}>Include</option>
             </select>
+            @error('is_water_included')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Peraturan Kamar</label>
             <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="room_rules" rows="4"></textarea>
+              name="room_rules" rows="4">{{ old('room_rules') }}</textarea>
+            @error('room_rules')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <button type="submit"

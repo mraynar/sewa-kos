@@ -25,12 +25,16 @@
             <label class="block text-xs font-semibold text-slate-500 mb-1.5">Kata Sandi Saat Ini</label>
             <div class="relative">
                 <input :type="showOld ? 'text' : 'password'" name="current_password" required placeholder="••••••••"
-                    class="w-full px-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all">
+                    class="w-full px-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all
+                    @error('current_password') border-red-300 @enderror">
                 <button type="button" @click="showOld = !showOld"
                     class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors">
                     <i class="fas text-sm" :class="showOld ? 'fa-eye-slash' : 'fa-eye'"></i>
                 </button>
             </div>
+            @error('current_password')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="pt-2">
@@ -45,12 +49,16 @@
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Kata Sandi Baru</label>
                     <div class="relative">
                         <input :type="showNew ? 'text' : 'password'" name="new_password" required placeholder="Min. 8 karakter"
-                            class="w-full px-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all">
+                            class="w-full px-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all
+                            @error('new_password') border-red-300 @enderror">
                         <button type="button" @click="showNew = !showNew"
                             class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition-colors">
                             <i class="fas text-sm" :class="showNew ? 'fa-eye-slash' : 'fa-eye'"></i>
                         </button>
                     </div>
+                    @error('new_password')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Konfirmasi Kata Sandi Baru</label>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\BookingService;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,7 +11,7 @@ class TaskController extends Controller
     public function task(Request $request)
     {
         $selected_month = $request->input('month', date('n'));
-        $selected_year  = $request->input('year', date('Y'));
+        $selected_year = $request->input('year', date('Y'));
         $selected_category = $request->input('category', 'Semua');
 
         $employees = User::where('role', 'pegawai')->get(['id', 'nickname', 'name']);
@@ -40,14 +39,19 @@ class TaskController extends Controller
         $request->validate([
             'employee_id' => 'required|exists:users,id',
             'selected_services' => 'required|array',
+        ], [
+            'employee_id.required' => 'Pegawai wajib dipilih.',
+            'employee_id.exists' => 'Pegawai tidak ditemukan.',
+            'selected_services.required' => 'Layanan wajib dipilih.',
+            'selected_services.array' => 'Format layanan tidak valid.',
         ]);
 
         BookingService::whereIn('id', $request->selected_services)
             ->update([
                 'employee_id' => $request->employee_id,
-                'service_status' => 'on_progress'
+                'service_status' => 'on_progress',
             ]);
 
-        return redirect()->back()->with('success', 'Berhasil menugaskan ' . count($request->selected_services) . ' layanan!');
+        return redirect()->back()->with('success', 'Berhasil menugaskan '.count($request->selected_services).' layanan!');
     }
 }

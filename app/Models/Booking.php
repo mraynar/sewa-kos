@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Booking extends Model
 {
     protected $primaryKey = 'id';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -20,7 +22,7 @@ class Booking extends Model
         'check_out',
         'total_price',
         'status',
-        'payment_token'
+        'payment_token',
     ];
 
     protected $casts = [

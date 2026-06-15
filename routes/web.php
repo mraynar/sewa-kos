@@ -18,6 +18,7 @@ use App\Http\Controllers\pegawai\PegawaiTaskController;
 use App\Http\Controllers\penyewa\PenyewaController;
 use App\Http\Controllers\penyewa\TransactionController;
 use App\Http\Controllers\TaskController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PenyewaController::class, 'index'])->name('home');
@@ -25,7 +26,7 @@ Route::get('/kamar/{id}', [PenyewaController::class, 'show'])->name('kamar.show'
 
 Route::post('/webhook/midtrans', [TransactionController::class, 'webhook'])
     ->name('webhook.midtrans')
-    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    ->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');

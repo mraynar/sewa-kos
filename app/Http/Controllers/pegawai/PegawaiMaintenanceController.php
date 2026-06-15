@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pegawai;
 use App\Http\Controllers\Controller;
 use App\Models\MaintenanceRequest;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,10 +41,13 @@ class PegawaiMaintenanceController extends Controller
     /**
      * Update the status of the assigned maintenance request.
      */
-    public function updateStatus(Request $request, int $id): \Illuminate\Http\RedirectResponse
+    public function updateStatus(Request $request, int $id): RedirectResponse
     {
         $request->validate([
             'status' => 'required|in:on_progress,done',
+        ], [
+            'status.required' => 'Status wajib dipilih.',
+            'status.in' => 'Status tidak valid.',
         ]);
 
         $report = MaintenanceRequest::where('id', $id)

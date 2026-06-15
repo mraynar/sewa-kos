@@ -11,6 +11,7 @@ class AdditionalServiceController extends Controller
     public function index()
     {
         $services = AdditionalService::all();
+
         return view('admin.list-service', compact('services'));
     }
 
@@ -21,13 +22,29 @@ class AdditionalServiceController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'service_name' => 'required|string|max:255',
+            'duration_type' => 'required|in:Harian,Mingguan,Bulanan',
+            'service_price' => 'required|numeric|min:0',
+        ], [
+            'service_name.required' => 'Nama layanan wajib diisi.',
+            'service_name.max' => 'Nama layanan maksimal 255 karakter.',
+            'duration_type.required' => 'Tipe durasi wajib dipilih.',
+            'duration_type.in' => 'Tipe durasi tidak valid.',
+            'service_price.required' => 'Harga layanan wajib diisi.',
+            'service_price.numeric' => 'Harga layanan harus berupa angka.',
+            'service_price.min' => 'Harga layanan minimal 0.',
+        ]);
+
         $service = AdditionalService::create($request->all());
+
         return redirect()->route('admin.additional_services.index')->with('success', 'Layanan tambahan berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
         $service = AdditionalService::findOrFail($id);
+
         return view('admin.edit-service', compact('service'));
     }
 
@@ -39,6 +56,14 @@ class AdditionalServiceController extends Controller
             'service_name' => 'required|string|max:255',
             'duration_type' => 'required|in:Harian,Mingguan,Bulanan',
             'service_price' => 'required|numeric|min:0',
+        ], [
+            'service_name.required' => 'Nama layanan wajib diisi.',
+            'service_name.max' => 'Nama layanan maksimal 255 karakter.',
+            'duration_type.required' => 'Tipe durasi wajib dipilih.',
+            'duration_type.in' => 'Tipe durasi tidak valid.',
+            'service_price.required' => 'Harga layanan wajib diisi.',
+            'service_price.numeric' => 'Harga layanan harus berupa angka.',
+            'service_price.min' => 'Harga layanan minimal 0.',
         ]);
 
         $service->update($request->all());

@@ -23,9 +23,12 @@
 
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Nama Service</label>
-            <input type="text" value="{{ $service->service_name }}" placeholder="Contoh : Laundry Express"
+            <input type="text" value="{{ old('service_name', $service->service_name) }}" placeholder="Contoh : Laundry Express"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="service_name" required>
+            @error('service_name')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
@@ -34,17 +37,23 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="duration_type" required>
               <option disabled>-- Pilih --</option>
-              <option value="Harian" {{ $service->duration_type == 'Harian' ? 'selected' : '' }}>Harian</option>
-              <option value="Mingguan" {{ $service->duration_type == 'Mingguan' ? 'selected' : '' }}>Mingguan</option>
-              <option value="Bulanan" {{ $service->duration_type == 'Bulanan' ? 'selected' : '' }}>Bulanan</option>
+              <option value="Harian" {{ old('duration_type', $service->duration_type) == 'Harian' ? 'selected' : '' }}>Harian</option>
+              <option value="Mingguan" {{ old('duration_type', $service->duration_type) == 'Mingguan' ? 'selected' : '' }}>Mingguan</option>
+              <option value="Bulanan" {{ old('duration_type', $service->duration_type) == 'Bulanan' ? 'selected' : '' }}>Bulanan</option>
             </select>
+            @error('duration_type')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Harga Service</label>
-            <input type="number" value="{{ $service->service_price }}" placeholder="Contoh : 50000"
+            <input type="number" value="{{ old('service_price', $service->service_price) }}" placeholder="Contoh : 50000"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="service_price" required>
+            @error('service_price')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
           <button type="submit"
             class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Simpan

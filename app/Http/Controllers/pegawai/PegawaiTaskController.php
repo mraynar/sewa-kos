@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pegawai;
 use App\Http\Controllers\Controller;
 use App\Models\BookingService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,10 +53,13 @@ class PegawaiTaskController extends Controller
     /**
      * Update the status of the assigned task.
      */
-    public function updateStatus(Request $request, int $id): \Illuminate\Http\RedirectResponse
+    public function updateStatus(Request $request, int $id): RedirectResponse
     {
         $request->validate([
             'status' => 'required|in:on_progress,done',
+        ], [
+            'status.required' => 'Status wajib dipilih.',
+            'status.in' => 'Status tidak valid.',
         ]);
 
         $task = BookingService::where('id', $id)

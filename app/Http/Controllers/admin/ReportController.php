@@ -30,6 +30,11 @@ class ReportController extends Controller
         $request->validate([
             'report_id' => 'required|exists:maintenance_requests,id',
             'worker_id' => 'required|exists:users,id',
+        ], [
+            'report_id.required' => 'Laporan kerusakan wajib dipilih.',
+            'report_id.exists' => 'Laporan kerusakan tidak ditemukan.',
+            'worker_id.required' => 'Pegawai wajib dipilih.',
+            'worker_id.exists' => 'Pegawai tidak ditemukan.',
         ]);
 
         $report = MaintenanceRequest::findOrFail($request->report_id);

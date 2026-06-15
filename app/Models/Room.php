@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Room extends Model
 {
@@ -21,7 +21,7 @@ class Room extends Model
         'is_electric_included',
         'is_water_included',
         'room_rules',
-        'status'
+        'status',
     ];
 
     protected $casts = [

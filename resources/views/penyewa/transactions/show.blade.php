@@ -178,6 +178,9 @@
                                         Mulai</label>
                                     <input type="text" id="tglMulai" readonly
                                         class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-semibold text-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none cursor-pointer transition-all">
+                                    @error('check_in')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label
@@ -185,6 +188,9 @@
                                         Selesai</label>
                                     <input type="text" id="tglSelesai" readonly
                                         class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm font-semibold text-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none cursor-pointer transition-all">
+                                    @error('check_out')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
 

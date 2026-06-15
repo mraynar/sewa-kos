@@ -14,7 +14,7 @@ return new class extends Migration
             $table->text('value')->nullable();
 
             // Opsional: Jika Anda ingin menambahkan timestamps (created_at, updated_at)
-            // $table->timestamps(); 
+            // $table->timestamps();
         });
     }
 

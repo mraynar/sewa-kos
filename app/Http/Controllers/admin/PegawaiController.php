@@ -27,20 +27,29 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nickname' => 'required|string|max:255',
-            'phone'    => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6'
+            'phone' => 'required|numeric|digits_between:10,15',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ], [
-            'email.unique' => 'Email ini sudah terdaftar! Silakan gunakan email lain.'
+            'nickname.required' => 'Nama panggilan wajib diisi.',
+            'nickname.max' => 'Nama panggilan maksimal 255 karakter.',
+            'phone.required' => 'Nomor HP wajib diisi.',
+            'phone.numeric' => 'Nomor HP harus berupa angka.',
+            'phone.digits_between' => 'Nomor HP harus antara 10 sampai 15 digit.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar! Silakan gunakan email lain.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
         ]);
 
         User::create([
-            'name'     => $request->nickname,
+            'name' => $request->nickname,
             'nickname' => $request->nickname,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
+            'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'role'     => 'pegawai',
+            'role' => 'pegawai',
         ]);
 
         return redirect()->route('admin.pegawai.index')->with('success', 'Akun Pegawai berhasil dibuat!');
@@ -59,9 +68,19 @@ class PegawaiController extends Controller
 
         $request->validate([
             'nickname' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:6'
+            'phone' => 'required|numeric|digits_between:10,15',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'nullable|string|min:8',
+        ], [
+            'nickname.required' => 'Nama panggilan wajib diisi.',
+            'nickname.max' => 'Nama panggilan maksimal 255 karakter.',
+            'phone.required' => 'Nomor HP wajib diisi.',
+            'phone.numeric' => 'Nomor HP harus berupa angka.',
+            'phone.digits_between' => 'Nomor HP harus antara 10 sampai 15 digit.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar! Silakan gunakan email lain.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
         ]);
 
         $data = [

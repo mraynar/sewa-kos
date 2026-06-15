@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\AdditionalService;
 use App\Models\Booking;
 use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Midtrans\Config;
+use Midtrans\Notification;
+use Midtrans\Snap;
+use Midtrans\Transaction;
 
 class TransactionController extends Controller
 {
@@ -17,8 +22,8 @@ class TransactionController extends Controller
      */
     public function checkPaymentStatus()
     {
-        \Midtrans\Config::$serverKey    = config('services.midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production', false);
 
         $bookings = Booking::where('user_id', auth()->id())
             ->where('status', 'pending')
@@ -26,9 +31,9 @@ class TransactionController extends Controller
 
         foreach ($bookings as $booking) {
             try {
-                $status            = \Midtrans\Transaction::status($booking->id);
+                $status = Transaction::status($booking->id);
                 $transactionStatus = $status->transaction_status ?? '';
-                $fraudStatus       = $status->fraud_status ?? null;
+                $fraudStatus = $status->fraud_status ?? null;
 
                 if ($transactionStatus === 'capture') {
                     if ($fraudStatus === 'challenge') {
@@ -53,17 +58,17 @@ class TransactionController extends Controller
 
     public function webhook(Request $request)
     {
-        \Midtrans\Config::$serverKey    = config('services.midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production', false);
 
         try {
-            $notification  = new \Midtrans\Notification();
-            $orderId       = $notification->order_id;
-            $status        = $notification->transaction_status;
-            $fraudStatus   = $notification->fraud_status ?? null;
+            $notification = new Notification;
+            $orderId = $notification->order_id;
+            $status = $notification->transaction_status;
+            $fraudStatus = $notification->fraud_status ?? null;
 
             $booking = Booking::find($orderId);
-            if (!$booking) {
+            if (! $booking) {
                 return response()->json(['message' => 'Booking not found'], 404);
             }
 
@@ -97,20 +102,20 @@ class TransactionController extends Controller
     public function bookingConfirmation(Request $request)
     {
         $request->validate([
-            'room_id'    => 'required|exists:rooms,id',
-            'check_in'   => 'required|date|after_or_equal:today',
-            'check_out'  => 'required|date|after:check_in',
-            'services'   => 'nullable|array',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in' => 'required|date|after_or_equal:today',
+            'check_out' => 'required|date|after:check_in',
+            'services' => 'nullable|array',
             'services.*' => 'exists:additional_services,id',
         ]);
 
-        $room     = Room::with('roomType')->findOrFail($request->room_id);
-        $checkIn  = \Carbon\Carbon::parse($request->check_in);
-        $checkOut = \Carbon\Carbon::parse($request->check_out);
-        $days     = max(1, $checkIn->diffInDays($checkOut));
+        $room = Room::with('roomType')->findOrFail($request->room_id);
+        $checkIn = Carbon::parse($request->check_in);
+        $checkOut = Carbon::parse($request->check_out);
+        $days = max(1, $checkIn->diffInDays($checkOut));
 
-        $daily   = $room->roomType->base_price_daily;
-        $weekly  = $room->roomType->base_price_weekly;
+        $daily = $room->roomType->base_price_daily;
+        $weekly = $room->roomType->base_price_weekly;
         $monthly = $room->roomType->base_price_monthly;
 
         if ($days >= 30) {
@@ -122,30 +127,30 @@ class TransactionController extends Controller
         }
 
         $detailServices = [];
-        $totalService   = 0;
+        $totalService = 0;
 
-        if (!empty($request->services)) {
+        if (! empty($request->services)) {
             $services = AdditionalService::whereIn('id', $request->services)->get();
             foreach ($services as $s) {
-                $isWeekly     = str_contains(strtolower($s->duration_type), 'minggu');
-                $qty          = $isWeekly ? (int) floor($days / 7) : $days;
-                $unit         = $isWeekly ? 'Minggu' : 'Hari';
-                $cost         = $s->service_price * $qty;
+                $isWeekly = str_contains(strtolower($s->duration_type), 'minggu');
+                $qty = $isWeekly ? (int) floor($days / 7) : $days;
+                $unit = $isWeekly ? 'Minggu' : 'Hari';
+                $cost = $s->service_price * $qty;
                 $totalService += $cost;
 
                 $detailServices[] = [
-                    'id'         => $s->id,
-                    'name'       => $s->service_name,
+                    'id' => $s->id,
+                    'name' => $s->service_name,
                     'price_unit' => $s->service_price,
-                    'qty'        => $qty,
-                    'unit'       => $unit,
-                    'cost'       => $cost,
+                    'qty' => $qty,
+                    'unit' => $unit,
+                    'cost' => $cost,
                 ];
             }
         }
 
         $grandTotal = $roomPrice + $totalService;
-        $title      = 'Konfirmasi Pesanan - Griya Asri Kos';
+        $title = 'Konfirmasi Pesanan - Griya Asri Kos';
 
         return view('penyewa.transactions.booking_confirmation', compact(
             'room',
@@ -165,21 +170,21 @@ class TransactionController extends Controller
     public function payment(Request $request)
     {
         $request->validate([
-            'room_id'         => 'required|exists:rooms,id',
-            'check_in'        => 'required|date',
-            'check_out'       => 'required|date|after:check_in',
-            'grand_total'     => 'required|integer|min:1',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
+            'grand_total' => 'required|integer|min:1',
             'service_details' => 'nullable|string',
         ]);
 
-        $room           = Room::with('roomType')->findOrFail($request->room_id);
-        $checkIn        = \Carbon\Carbon::parse($request->check_in);
-        $checkOut       = \Carbon\Carbon::parse($request->check_out);
-        $days           = max(1, $checkIn->diffInDays($checkOut));
-        $grandTotal     = (int) $request->grand_total;
+        $room = Room::with('roomType')->findOrFail($request->room_id);
+        $checkIn = Carbon::parse($request->check_in);
+        $checkOut = Carbon::parse($request->check_out);
+        $days = max(1, $checkIn->diffInDays($checkOut));
+        $grandTotal = (int) $request->grand_total;
         $serviceDetails = json_decode($request->service_details ?? '[]', true);
-        $deadline       = now()->addDay()->translatedFormat('d M Y, H:i') . ' WIB';
-        $title          = 'Pembayaran - Griya Asri Kos';
+        $deadline = now()->addDay()->translatedFormat('d M Y, H:i').' WIB';
+        $title = 'Pembayaran - Griya Asri Kos';
 
         return view('penyewa.transactions.payment', compact(
             'room',
@@ -199,75 +204,77 @@ class TransactionController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'room_id'         => 'required|exists:rooms,id',
-            'check_in'        => 'required|date',
-            'check_out'       => 'required|date|after:check_in',
-            'total_price'     => 'required|integer|min:1',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
+            'total_price' => 'required|integer|min:1',
             'service_details' => 'nullable|array',
         ]);
 
-        $user    = auth()->user();
-        $orderId = 'KOS-' . time();
-        $room    = Room::findOrFail($request->room_id);
+        $user = auth()->user();
+        $orderId = 'KOS-'.time();
+        $room = Room::findOrFail($request->room_id);
 
         DB::beginTransaction();
         try {
             $booking = Booking::create([
-                'id'          => $orderId,
-                'user_id'     => $user->id,
-                'room_id'     => $request->room_id,
-                'check_in'    => $request->check_in,
-                'check_out'   => $request->check_out,
+                'id' => $orderId,
+                'user_id' => $user->id,
+                'room_id' => $request->room_id,
+                'check_in' => $request->check_in,
+                'check_out' => $request->check_out,
                 'total_price' => $request->total_price,
-                'status'      => 'pending',
+                'status' => 'pending',
             ]);
 
-            if (!empty($request->service_details)) {
+            if (! empty($request->service_details)) {
                 foreach ($request->service_details as $s) {
                     $service = AdditionalService::where('service_name', $s['name'])->first();
                     if ($service) {
                         $booking->additionalServices()->attach($service->id, [
-                            'quantity'          => $s['qty'],
+                            'quantity' => $s['qty'],
                             'price_at_purchase' => (int) ($s['cost'] / max(1, $s['qty'])),
-                            'created_at'        => now(),
-                            'updated_at'        => now(),
+                            'created_at' => now(),
+                            'updated_at' => now(),
                         ]);
                     }
                 }
             }
 
-            \Midtrans\Config::$serverKey    = config('services.midtrans.server_key');
-            \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
-            \Midtrans\Config::$isSanitized  = true;
-            \Midtrans\Config::$is3ds        = true;
+            Config::$serverKey = config('services.midtrans.server_key');
+            Config::$isProduction = config('services.midtrans.is_production', false);
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
 
             $params = [
                 'transaction_details' => [
-                    'order_id'     => $orderId,
+                    'order_id' => $orderId,
                     'gross_amount' => $request->total_price,
                 ],
                 'item_details' => [
                     [
-                        'id'       => $request->room_id,
-                        'price'    => $request->total_price,
+                        'id' => $request->room_id,
+                        'price' => $request->total_price,
                         'quantity' => 1,
-                        'name'     => 'Kamar ' . $room->room_number,
-                    ]
+                        'name' => 'Kamar '.$room->room_number,
+                    ],
                 ],
                 'customer_details' => [
                     'first_name' => $user->nickname,
-                    'email'      => $user->email,
-                    'phone'      => $user->phone ?? '',
+                    'email' => $user->email,
+                    'phone' => $user->phone ?? '',
                 ],
             ];
 
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            $snapToken = Snap::getSnapToken($params);
             $booking->update(['payment_token' => $snapToken]);
 
             DB::commit();
+
             return response()->json(['token' => $snapToken]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -280,38 +287,38 @@ class TransactionController extends Controller
             ->where('status', 'paid')
             ->firstOrFail();
 
-        $checkIn  = \Carbon\Carbon::parse($booking->check_in);
-        $checkOut = \Carbon\Carbon::parse($booking->check_out);
-        $days     = max(1, $checkIn->diffInDays($checkOut));
+        $checkIn = Carbon::parse($booking->check_in);
+        $checkOut = Carbon::parse($booking->check_out);
+        $days = max(1, $checkIn->diffInDays($checkOut));
 
         $totalServiceCost = 0;
-        $serviceDetails   = [];
+        $serviceDetails = [];
         foreach ($booking->additionalServices as $s) {
             $isWeekly = str_contains(strtolower($s->duration_type), 'minggu');
-            $qty      = $isWeekly ? (int) floor($days / 7) : $days;
-            $unit     = $isWeekly ? 'Minggu' : 'Hari';
-            $cost     = $s->service_price * $qty;
+            $qty = $isWeekly ? (int) floor($days / 7) : $days;
+            $unit = $isWeekly ? 'Minggu' : 'Hari';
+            $cost = $s->service_price * $qty;
             $totalServiceCost += $cost;
             $serviceDetails[] = [
-                'name'       => $s->service_name,
-                'qty'        => $qty,
-                'unit'       => $unit,
+                'name' => $s->service_name,
+                'qty' => $qty,
+                'unit' => $unit,
                 'price_unit' => $s->service_price,
-                'cost'       => $cost,
+                'cost' => $cost,
             ];
         }
 
-        $roomPrice  = $booking->total_price - $totalServiceCost;
-        $title      = 'Receipt #' . $booking->id;
+        $roomPrice = $booking->total_price - $totalServiceCost;
+        $title = 'Receipt #'.$booking->id;
 
         $paymentMethod = 'Midtrans Payment';
-        $paymentTime   = $booking->updated_at;
+        $paymentTime = $booking->updated_at;
         try {
-            \Midtrans\Config::$serverKey    = config('services.midtrans.server_key');
-            \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
-            $status        = \Midtrans\Transaction::status($booking->id);
+            Config::$serverKey = config('services.midtrans.server_key');
+            Config::$isProduction = config('services.midtrans.is_production', false);
+            $status = Transaction::status($booking->id);
             $paymentMethod = strtoupper(str_replace('_', ' ', $status->payment_type ?? 'Midtrans Payment'));
-            $paymentTime   = $status->transaction_time ?? $booking->updated_at;
+            $paymentTime = $status->transaction_time ?? $booking->updated_at;
         } catch (\Exception $e) {
         }
 

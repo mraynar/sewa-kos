@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
-use Faker\Factory as Faker;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
                 'gender' => null,
                 'birth_date' => null,
                 'created_at' => $now,
-                'updated_at' => $now
+                'updated_at' => $now,
             ],
             [
                 'id' => 2,
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
                 'gender' => null,
                 'birth_date' => null,
                 'created_at' => $now,
-                'updated_at' => $now
+                'updated_at' => $now,
             ],
             [
                 'id' => 3,
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
                 'gender' => 'Perempuan',
                 'birth_date' => '2011-05-03',
                 'created_at' => $now,
-                'updated_at' => $now
+                'updated_at' => $now,
             ],
             [
                 'id' => 4,
@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
                 'gender' => 'Laki-laki',
                 'birth_date' => '2006-05-23',
                 'created_at' => $now,
-                'updated_at' => $now
+                'updated_at' => $now,
             ],
         ]);
 
@@ -116,16 +116,16 @@ class DatabaseSeeder extends Seeder
         $rules = "1. Dilarang membawa lawan jenis ke dalam kamar.\n2. Maksimal bertamu jam 22.00 WIB.\n3. Menjaga kebersihan dan ketenangan.";
 
         for ($i = 1; $i <= 5; $i++) {
-            $rooms[] = ['room_type_id' => 1, 'room_number' => 'H0' . $i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 800000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed, Lemari, Meja Belajar, Kipas Angin, WiFi"', 'area_size' => '3x4 m', 'is_electric_included' => 0, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
+            $rooms[] = ['room_type_id' => 1, 'room_number' => 'H0'.$i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 800000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed, Lemari, Meja Belajar, Kipas Angin, WiFi"', 'area_size' => '3x4 m', 'is_electric_included' => 0, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
         }
         for ($i = 1; $i <= 5; $i++) {
-            $rooms[] = ['room_type_id' => 2, 'room_number' => 'S0' . $i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 1200000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed, Lemari, Meja Belajar, AC, Kamar Mandi Dalam, WiFi"', 'area_size' => '3x4 m', 'is_electric_included' => 1, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
+            $rooms[] = ['room_type_id' => 2, 'room_number' => 'S0'.$i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 1200000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed, Lemari, Meja Belajar, AC, Kamar Mandi Dalam, WiFi"', 'area_size' => '3x4 m', 'is_electric_included' => 1, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
         }
         for ($i = 1; $i <= 5; $i++) {
-            $rooms[] = ['room_type_id' => 3, 'room_number' => 'N0' . $i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 1500000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed Queen, Lemari Besar, Meja Kerja, AC, Kamar Mandi Dalam, WiFi"', 'area_size' => '3x4 m', 'is_electric_included' => 1, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
+            $rooms[] = ['room_type_id' => 3, 'room_number' => 'N0'.$i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 1500000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed Queen, Lemari Besar, Meja Kerja, AC, Kamar Mandi Dalam, WiFi"', 'area_size' => '3x4 m', 'is_electric_included' => 1, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
         }
         for ($i = 1; $i <= 5; $i++) {
-            $rooms[] = ['room_type_id' => 4, 'room_number' => 'L0' . $i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 2000000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed Queen, Lemari Besar, Meja Kerja, AC, Kamar Mandi Dalam, TV, WiFi"', 'area_size' => '4x5 m', 'is_electric_included' => 1, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
+            $rooms[] = ['room_type_id' => 4, 'room_number' => 'L0'.$i, 'gender_type' => $i % 2 == 0 ? 'Putri' : 'Putra', 'price' => 2000000, 'rating' => $faker->randomFloat(1, 4.0, 5.0), 'facilities' => '"Bed Queen, Lemari Besar, Meja Kerja, AC, Kamar Mandi Dalam, TV, WiFi"', 'area_size' => '4x5 m', 'is_electric_included' => 1, 'is_water_included' => 1, 'room_rules' => $rules, 'status' => 'available', 'created_at' => $now, 'updated_at' => $now];
         }
         DB::table('rooms')->insert($rooms);
 
@@ -149,7 +149,7 @@ class DatabaseSeeder extends Seeder
             // Menggunakan copy() agar $checkIn tidak berubah nilainya
             $checkOut = $checkIn->copy()->addMonths($faker->numberBetween(1, 12));
 
-            $bookingId = 'BKG-' . strtoupper(Str::random(10));
+            $bookingId = 'BKG-'.strtoupper(Str::random(10));
 
             DB::table('bookings')->insert([
                 'id' => $bookingId,
@@ -162,7 +162,7 @@ class DatabaseSeeder extends Seeder
                 'payment_token' => $status == 'pending' ? Str::random(20) : null,
                 // Menggunakan copy()
                 'created_at' => $checkIn->copy()->subDays($faker->numberBetween(1, 5)),
-                'updated_at' => $now
+                'updated_at' => $now,
             ]);
 
             if ($status == 'paid') {
@@ -181,7 +181,7 @@ class DatabaseSeeder extends Seeder
                     'quantity' => $quantity,
                     'price_at_purchase' => $servicePrice,
                     'created_at' => $now,
-                    'updated_at' => $now
+                    'updated_at' => $now,
                 ]);
 
                 DB::table('bookings')->where('id', $bookingId)->increment('total_price', ($servicePrice * $quantity));
@@ -203,7 +203,7 @@ class DatabaseSeeder extends Seeder
                     'status' => 'done',
                     'employee_id' => 2,
                     // Diubah menjadi now() helper agar tidak ada mutasi referensi waktu
-                    'created_at' => now()->subDays(2)
+                    'created_at' => now()->subDays(2),
                 ],
                 [
                     'user_id' => 4,
@@ -214,7 +214,7 @@ class DatabaseSeeder extends Seeder
                     'location' => 'Kamar L01',
                     'status' => 'on_progress',
                     'employee_id' => 2,
-                    'created_at' => now()->subHours(5)
+                    'created_at' => now()->subHours(5),
                 ],
                 [
                     'user_id' => 4,
@@ -225,8 +225,8 @@ class DatabaseSeeder extends Seeder
                     'location' => 'Kamar L02',
                     'status' => 'pending',
                     'employee_id' => null,
-                    'created_at' => now()->subMinutes(30)
-                ]
+                    'created_at' => now()->subMinutes(30),
+                ],
             ]);
         }
     }

@@ -63,6 +63,9 @@
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-500 ml-1">Nomor HP atau Email</label>
                             <input type="text" name="email" required value="{{ old('email') }}" class="w-full px-4 py-3.5 bg-white border border-gray-200 focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm placeholder:text-gray-400" placeholder="example@gmail.com">
+                            @error('email')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="space-y-1.5">
                             <div class="flex justify-between items-center px-1">
@@ -75,6 +78,9 @@
                                     <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
                                 </button>
                             </div>
+                            @error('password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-bold text-base shadow-lg shadow-blue-100 hover:bg-primary-dark transition-all active:scale-[0.98] mt-2">Masuk</button>
 

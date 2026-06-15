@@ -14,7 +14,7 @@ class PesananController extends Controller
 
         $query = Booking::with(['user', 'room']);
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('id', 'LIKE', "%{$search}%")
                 ->orWhereHas('user', function ($q) use ($search) {
                     $q->where('full_name_ktp', 'LIKE', "%{$search}%");

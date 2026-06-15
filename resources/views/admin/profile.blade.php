@@ -55,6 +55,9 @@
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Nickname</label>
             <input type="text" name="nickname" value="{{ old('nickname', $user->nickname) }}" required
               class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-blue-500/5 outline-none">
+            @error('nickname')
+              <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
           </div>
         </div>
 
@@ -62,6 +65,9 @@
           <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Site Title</label>
           <input type="text" name="site_title" value="{{ old('site_title', $siteTitle) }}" required
             class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-blue-500/5 outline-none">
+          @error('site_title')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+          @enderror
         </div>
 
         <div class="bg-slate-50 p-8 rounded-[32px] border border-slate-100">
@@ -69,6 +75,9 @@
             Password</label>
           <input type="password" name="new_password" placeholder="Isi hanya jika ingin mengganti password"
             class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-blue-500/5 outline-none">
+          @error('new_password')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+          @enderror
         </div>
 
         <div class="flex justify-end border-t border-gray-50 pt-6">

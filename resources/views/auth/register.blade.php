@@ -52,15 +52,24 @@
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-500 ml-1">Nama Panggilan</label>
                             <input type="text" name="nickname" required value="{{ old('nickname') }}" class="w-full px-4 py-3 bg-white border border-gray-200 focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm placeholder:text-gray-400" placeholder="Masukkan nama panggilan anda">
+                            @error('nickname')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-500 ml-1">Email</label>
                                 <input type="email" name="email" required value="{{ old('email') }}" class="w-full px-4 py-3 bg-white border border-gray-200 focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm placeholder:text-gray-400" placeholder="example@gmail.com">
+                                @error('email')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold text-slate-500 ml-1">No. Telp</label>
                                 <input type="tel" name="phone" required value="{{ old('phone') }}" class="w-full px-4 py-3 bg-white border border-gray-200 focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm placeholder:text-gray-400" placeholder="08130239...">
+                                @error('phone')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
@@ -72,6 +81,9 @@
                                     <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
                                 </button>
                             </div>
+                            @error('password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="space-y-1.5">
@@ -82,6 +94,9 @@
                                     <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
                                 </button>
                             </div>
+                            @error('confirm_password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-bold text-base shadow-lg shadow-blue-100 hover:bg-primary-dark transition-all active:scale-[0.98] mt-2">Buat Akun Sekarang</button>

@@ -27,7 +27,13 @@ class ProfileController extends Controller
         $request->validate([
             'nickname' => 'required|string|max:255',
             'site_title' => 'required|string|max:255',
-            'new_password' => 'nullable|string|min:6'
+            'new_password' => 'nullable|string|min:8',
+        ], [
+            'nickname.required' => 'Nama panggilan wajib diisi.',
+            'nickname.max' => 'Nama panggilan maksimal 255 karakter.',
+            'site_title.required' => 'Judul situs wajib diisi.',
+            'site_title.max' => 'Judul situs maksimal 255 karakter.',
+            'new_password.min' => 'Kata sandi baru minimal 8 karakter.',
         ]);
 
         $user = Auth::user();
