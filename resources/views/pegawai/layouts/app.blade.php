@@ -20,9 +20,23 @@
 </head>
 
 <body class="bg-slate-100" onload="startTime()">
-  <div class="flex h-screen">
+  <div class="flex h-screen" x-data="{ sidebarOpen: false }">
+
+    {{-- Mobile overlay --}}
+    <div class="fixed inset-0 bg-black/50 z-20 lg:hidden"
+         x-show="sidebarOpen"
+         @click="sidebarOpen = false"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+    </div>
+
     <!-- Sidebar -->
-    <div class="w-64 bg-gray-900 text-white p-6 flex flex-col justify-between">
+    <div class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white p-6 flex flex-col justify-between flex-shrink-0 transform transition-transform duration-300 lg:translate-x-0"
+         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
       <div>
         <a href="{{ route('pegawai.dashboard') }}" class="flex gap-2 mb-8 items-center mx-2">
           <i class="fas fa-solid fa-user-tie text-blue-500 text-xl"></i>
@@ -67,23 +81,29 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden min-w-0">
       <!-- Topbar -->
-      <div class="bg-white shadow-sm border-b border-gray-100 p-6 flex justify-between items-center">
-        <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">@yield('page_title', 'Dashboard')</h2>
-        <div class="flex items-center space-x-4">
-          <span class="text-sm font-bold text-gray-500">Halo, {{ Auth::user()->nickname ?? Auth::user()->name }}</span>
-          <div class="text-lg font-black text-slate-800 border-l border-gray-200 pl-4" id="jam"></div>
+      <div class="bg-white shadow-sm border-b border-gray-100 px-4 md:px-6 py-4 flex justify-between items-center">
+        {{-- Hamburger (mobile only) --}}
+        <button @click="sidebarOpen = !sidebarOpen"
+          class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition flex-shrink-0 mr-3">
+          <i class="fas fa-bars text-base"></i>
+        </button>
+        <h2 class="text-base md:text-xl font-black text-slate-800 uppercase tracking-tight truncate flex-1">@yield('page_title', 'Dashboard')</h2>
+        <div class="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
+          <span class="hidden sm:block text-sm font-bold text-gray-500">Halo, {{ Auth::user()->nickname ?? Auth::user()->name }}</span>
+          <div class="text-sm md:text-lg font-black text-slate-800 md:border-l md:border-gray-200 md:pl-4" id="jam"></div>
         </div>
       </div>
 
       <!-- Page Content -->
-      <div class="flex-1 overflow-auto p-8">
+      <div class="flex-1 overflow-auto p-4 md:p-8">
         @yield('content')
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script>
     function startTime() {
       const today = new Date();

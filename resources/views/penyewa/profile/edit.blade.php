@@ -73,7 +73,7 @@
 
     <div class="pt-4 border-t border-slate-100">
         <button type="submit"
-            class="px-8 py-3 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-md shadow-primary/20 active:scale-95">
+            class="w-full md:w-auto px-8 py-3 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-md shadow-primary/20 active:scale-95 min-h-[44px]">
             Simpan Perubahan
         </button>
     </div>

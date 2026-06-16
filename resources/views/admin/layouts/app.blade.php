@@ -16,8 +16,23 @@
       border-radius: 0.5rem;
     }
   </style>
-  <div class="flex h-screen">
-    <div class="w-64 bg-gray-900 text-white p-6">
+
+  <div class="flex h-screen" x-data="{ sidebarOpen: false }">
+    {{-- Mobile overlay --}}
+    <div class="fixed inset-0 bg-black/50 z-20 lg:hidden"
+         x-show="sidebarOpen"
+         @click="sidebarOpen = false"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+    </div>
+
+    {{-- Sidebar --}}
+    <div class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white p-6 flex-shrink-0 transform transition-transform duration-300 lg:translate-x-0"
+         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
       <a href="{{ route('admin.dashboard') }}" class="flex gap-2 mb-8 items-center mx-2">
         <i class="fas fa-home text-white text-xl"></i>
         <h1 class="text-2xl font-black text-primary tracking-tighter flex items-center gap-2">
@@ -73,18 +88,24 @@
       </nav>
     </div>
 
-    <div class="flex-1 flex flex-col">
-      <div class="bg-white shadow p-6 flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-gray-800">@yield('page_title', 'Dashboard')</h2>
-        <div class="text-2xl font-bold text-gray-800" id="jam"></div>
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div class="bg-white shadow p-4 md:p-6 flex justify-between items-center">
+        {{-- Hamburger (mobile only) --}}
+        <button @click="sidebarOpen = !sidebarOpen"
+          class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition flex-shrink-0 mr-3">
+          <i class="fas fa-bars text-base"></i>
+        </button>
+        <h2 class="text-lg md:text-2xl font-bold text-gray-800 truncate">@yield('page_title', 'Dashboard')</h2>
+        <div class="text-sm md:text-2xl font-bold text-gray-800" id="jam"></div>
       </div>
 
-      <div class="flex-1 overflow-auto p-6 bg-slate-200/75">
+      <div class="flex-1 overflow-auto p-4 md:p-6 bg-slate-200/75">
         @yield('content')
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script>
     function startTime() {
       const today = new Date();

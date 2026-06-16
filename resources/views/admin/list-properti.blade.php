@@ -2,10 +2,10 @@
 
 @section('properti_active', 'active')
 @section('content')
-  <div class="header-content flex items-center justify-between mb-4 align-middle">
-    <h1 class="text-2xl font-bold text-gray-800">Daftar Properti</h1>
+  <div class="header-content flex flex-wrap items-center justify-between mb-4 gap-3">
+    <h1 class="text-xl md:text-2xl font-bold text-gray-800">Daftar Properti</h1>
     <a href="{{ route('admin.properti.create') }}"
-      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Tambah
+      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded min-h-[44px] flex items-center">Tambah
       Properti</a>
   </div>
 
@@ -22,7 +22,8 @@
   @endif
 
   <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-100 text-left">
-    <table class="w-full border-collapse">
+    <div class="overflow-x-auto">
+    <table class="w-full border-collapse min-w-[640px]">
       <thead class="bg-blue-600 text-white">
         <tr>
           <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">No</th>
@@ -68,6 +69,7 @@
 
       </tbody>
     </table>
+    </div>
   </div>
 
   <div id="deleteModal" class="fixed inset-0 bg-black/60 hidden justify-center items-center z-50 backdrop-blur-sm">

@@ -3,9 +3,9 @@
 @section('pengguna_active', 'active')
 @section('content')
   <div class="">
-    <div class="header-content flex justify-between mb-4 items-center">
+    <div class="header-content flex flex-col md:flex-row justify-between mb-4 gap-3 items-start md:items-center">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Daftar Pengguna (Penyewa)</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800">Daftar Pengguna (Penyewa)</h1>
 
         @if (!empty($search))
           <p class="text-sm text-gray-600 mt-1">
@@ -14,18 +14,19 @@
         @endif
       </div>
 
-      <form method="GET" action="{{ url('/admin/pengguna') }}" class="flex gap-2">
+      <form method="GET" action="{{ url('/admin/pengguna') }}" class="flex gap-2 w-full md:w-auto">
         <input type="text" name="search" placeholder="Cari Nama, Email, atau HP..." value="{{ $search }}"
-          class="border px-4 py-2 rounded-lg w-64 focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm">
+          class="border px-4 py-2 rounded-lg w-full sm:w-64 focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm">
         <button type="submit"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition-all shadow-md">
+          class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition-all shadow-md min-h-[44px]">
           Cari
         </button>
       </form>
     </div>
 
     <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-100 text-left">
-      <table class="w-full border-collapse">
+      <div class="overflow-x-auto">
+      <table class="w-full border-collapse min-w-[700px]">
         <thead class="bg-blue-600 text-white">
           <tr>
             <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">No</th>
@@ -79,6 +80,7 @@
 
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 @endsection
