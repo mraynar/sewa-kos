@@ -54,7 +54,7 @@
           <div class="space-y-2">
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Nickname</label>
             <input type="text" name="nickname" value="{{ old('nickname', $user->nickname) }}" required
-              class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-blue-500/5 outline-none">
+              class="w-full border rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-blue-500/5 outline-none {{ $errors->has('nickname') ? 'border-red-400' : 'border-gray-200' }}">
             @error('nickname')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
@@ -64,7 +64,7 @@
         <div class="space-y-2">
           <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-1">Site Title</label>
           <input type="text" name="site_title" value="{{ old('site_title', $siteTitle) }}" required
-            class="w-full border border-gray-200 rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-blue-500/5 outline-none">
+            class="w-full border rounded-2xl px-6 py-4 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-blue-500/5 outline-none {{ $errors->has('site_title') ? 'border-red-400' : 'border-gray-200' }}">
           @error('site_title')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
           @enderror
@@ -74,7 +74,7 @@
           <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1 mb-4 text-left">Ganti
             Password</label>
           <input type="password" name="new_password" placeholder="Isi hanya jika ingin mengganti password"
-            class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-blue-500/5 outline-none">
+            class="w-full bg-white border rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-blue-500/5 outline-none {{ $errors->has('new_password') ? 'border-red-400' : 'border-slate-200' }}">
           @error('new_password')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
           @enderror

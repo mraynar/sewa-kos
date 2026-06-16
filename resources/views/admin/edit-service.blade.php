@@ -24,7 +24,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Nama Service</label>
             <input type="text" value="{{ old('service_name', $service->service_name) }}" placeholder="Contoh : Laundry Express"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('service_name') ? 'border-red-400' : 'border-gray-300' }}"
               name="service_name" required>
             @error('service_name')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -34,7 +34,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Duration Type</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('duration_type') ? 'border-red-400' : 'border-gray-300' }}"
               name="duration_type" required>
               <option disabled>-- Pilih --</option>
               <option value="Harian" {{ old('duration_type', $service->duration_type) == 'Harian' ? 'selected' : '' }}>Harian</option>
@@ -49,7 +49,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Harga Service</label>
             <input type="number" value="{{ old('service_price', $service->service_price) }}" placeholder="Contoh : 50000"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('service_price') ? 'border-red-400' : 'border-gray-300' }}"
               name="service_price" required>
             @error('service_price')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

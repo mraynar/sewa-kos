@@ -24,7 +24,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Status</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('status') ? 'border-red-400' : 'border-gray-300' }}"
               name="status" required>
               <option disabled>-- Pilih --</option>
               <option value="available" {{ old('status', $room->status) == 'available' ? 'selected' : '' }}>Available</option>
@@ -39,7 +39,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Tipe Kamar</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('room_type_id') ? 'border-red-400' : 'border-gray-300' }}"
               name="room_type_id" required>
               <option disabled>-- Pilih Tipe Kamar --</option>
               @foreach ($roomTypes as $type)
@@ -55,7 +55,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Tipe Gender</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('gender_type') ? 'border-red-400' : 'border-gray-300' }}"
               name="gender_type" required>
               <option disabled>-- Pilih Tipe Gender --</option>
               <option value="Putra" {{ old('gender_type', $room->gender_type) == 'Putra' ? 'selected' : '' }}>Putra</option>
@@ -69,7 +69,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Harga</label>
             <input type="number" value="{{ old('price', $room->price) }}" placeholder="Contoh : 350000"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('price') ? 'border-red-400' : 'border-gray-300' }}"
               name="price" required>
             @error('price')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -79,7 +79,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Fasilitas</label>
             <input type="text" value="{{ old('facilities', $room->facilities) }}" placeholder=" Contoh : Bed, Lemari, Meja Belajar"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('facilities') ? 'border-red-400' : 'border-gray-300' }}"
               name="facilities" required>
             @error('facilities')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -89,7 +89,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Ukuran Kamar (m)</label>
             <input type="text" value="{{ old('area_size', $room->area_size) }}" placeholder=" Contoh : 4x6"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('area_size') ? 'border-red-400' : 'border-gray-300' }}"
               name="area_size" required>
             @error('area_size')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -99,7 +99,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Listrik</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('is_electric_included') ? 'border-red-400' : 'border-gray-300' }}"
               name="is_electric_included" required>
               <option disabled>-- Pilih --</option>
               <option value="0" {{ old('is_electric_included', $room->is_electric_included) == 0 ? 'selected' : '' }}>Token</option>
@@ -113,7 +113,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Air</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('is_water_included') ? 'border-red-400' : 'border-gray-300' }}"
               name="is_water_included" required>
               <option disabled>-- Pilih --</option>
               <option value="0" {{ old('is_water_included', $room->is_water_included) == 0 ? 'selected' : '' }}>Tidak Ada</option>

@@ -21,7 +21,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Tipe Kamar</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('room_type_id') ? 'border-red-400' : 'border-gray-300' }}"
               name="room_type_id" required>
               <option selected disabled>-- Pilih Tipe Kamar --</option>
               <option value="1" {{ old('room_type_id') == 1 ? 'selected' : '' }}>Hemat</option>
@@ -37,7 +37,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Tipe Gender</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('gender_type') ? 'border-red-400' : 'border-gray-300' }}"
               name="gender_type" required>
               <option selected disabled>-- Pilih Tipe Gender --</option>
               <option value="Putra" {{ old('gender_type') == 'Putra' ? 'selected' : '' }}>Putra</option>
@@ -51,7 +51,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Harga</label>
             <input type="number" placeholder="Contoh : 350000" value="{{ old('price') }}"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('price') ? 'border-red-400' : 'border-gray-300' }}"
               name="price" required>
             @error('price')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -61,7 +61,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Fasilitas</label>
             <input type="text" placeholder="Contoh : Bed, Lemari, Meja Belajar" value="{{ old('facilities') }}"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('facilities') ? 'border-red-400' : 'border-gray-300' }}"
               name="facilities" required>
             @error('facilities')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -71,7 +71,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Ukuran Kamar (m)</label>
             <input type="text" placeholder="Contoh : 4x6" value="{{ old('area_size') }}"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('area_size') ? 'border-red-400' : 'border-gray-300' }}"
               name="area_size" required>
             @error('area_size')
               <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -81,7 +81,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Listrik</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('is_electric_included') ? 'border-red-400' : 'border-gray-300' }}"
               name="is_electric_included" required>
               <option selected disabled>-- Pilih --</option>
               <option value="0" {{ old('is_electric_included') === '0' ? 'selected' : '' }}>Token</option>
@@ -95,7 +95,7 @@
           <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Air</label>
             <select
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 {{ $errors->has('is_water_included') ? 'border-red-400' : 'border-gray-300' }}"
               name="is_water_included" required>
               <option selected disabled>-- Pilih --</option>
               <option value="0" {{ old('is_water_included') === '0' ? 'selected' : '' }}>Tidak Ada</option>

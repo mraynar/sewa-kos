@@ -62,7 +62,7 @@
                         @csrf
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-500 ml-1">Nomor HP atau Email</label>
-                            <input type="text" name="email" required value="{{ old('email') }}" class="w-full px-4 py-3.5 bg-white border border-gray-200 focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm placeholder:text-gray-400" placeholder="example@gmail.com">
+                            <input type="text" name="email" required value="{{ old('email') }}" class="w-full px-4 py-3.5 bg-white border focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm placeholder:text-gray-400 {{ $errors->has('email') ? 'border-red-400' : 'border-gray-200' }}" placeholder="example@gmail.com">
                             @error('email')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -73,7 +73,7 @@
                                 <a href="{{ route('password.request') }}" class="text-xs font-bold text-slate-500 hover:underline">Lupa kata sandi?</a>
                             </div>
                             <div class="relative" x-data="{ show: false }">
-                                <input :type="show ? 'text' : 'password'" name="password" required class="w-full pl-4 pr-12 py-3.5 bg-white border border-gray-200 focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm" placeholder="Masukkan kata sandi">
+                                <input :type="show ? 'text' : 'password'" name="password" required class="w-full pl-4 pr-12 py-3.5 bg-white border focus:border-primary rounded-xl transition-all font-medium text-slate-700 outline-none text-sm {{ $errors->has('password') ? 'border-red-400' : 'border-gray-200' }}" placeholder="Masukkan kata sandi">
                                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors">
                                     <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
                                 </button>
