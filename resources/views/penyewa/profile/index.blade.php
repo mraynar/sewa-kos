@@ -40,7 +40,7 @@
                         </div>
 
                         {{-- Hamburger button — mobile only --}}
-                        <button @click="open = !open"
+                        <button x-on:click="open = !open"
                             class="lg:hidden flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors"
                             aria-label="Toggle menu">
                             <i class="fas text-base transition-transform duration-200"
@@ -49,17 +49,16 @@
                     </div>
 
                     {{-- Nav menu — desktop: always visible | mobile: slide-down drawer --}}
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden
-                                hidden lg:block"
-                         :class="open ? '!block' : ''"
-                         x-show="true"
+                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden lg:!block"
+                         :class="open ? 'block' : 'hidden'"
+                         x-show="open"
                          x-transition:enter="transition ease-out duration-200"
                          x-transition:enter-start="opacity-0 -translate-y-2"
                          x-transition:enter-end="opacity-100 translate-y-0"
                          x-transition:leave="transition ease-in duration-150"
                          x-transition:leave-start="opacity-100 translate-y-0"
                          x-transition:leave-end="opacity-0 -translate-y-2"
-                         @click.outside="open = false">
+                         x-on:click.outside="open = false">
                         <nav class="p-1.5 space-y-0.5">
                             @php
                                 $navItems = [
