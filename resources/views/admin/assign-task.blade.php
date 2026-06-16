@@ -59,19 +59,26 @@
           <label class="block text-[10px] font-black text-gray-400 uppercase mb-2 ml-1 tracking-widest">Tugaskan ke Staf
             (Filter: {{ $selected_category }})</label>
           <select name="employee_id"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition
+            @error('employee_id') border-red-300 @enderror"
             required>
             <option value="" disabled selected>-- Pilih Pegawai Pelaksana --</option>
             @foreach ($employees as $emp)
               <option value="{{ $emp->id }}">{{ strtoupper($emp->nickname) }} ({{ $emp->name ?? '-' }})</option>
             @endforeach
           </select>
+          @error('employee_id')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+          @enderror
         </div>
         <button type="submit"
           class="w-full md:w-auto bg-blue-600 hover:bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest px-8 py-4 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95">
           Apply Assignment
         </button>
       </div>
+      @error('selected_services')
+        <p class="text-red-500 text-sm mt-1 mb-4">{{ $message }}</p>
+      @enderror
 
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">

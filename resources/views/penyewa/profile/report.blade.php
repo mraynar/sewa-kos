@@ -27,7 +27,8 @@
                     <label class="block text-xs font-semibold text-slate-500 mb-1.5">Nomor Kamar</label>
                     <div class="relative">
                         <select name="booking_id" required
-                            class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all appearance-none cursor-pointer"
+                            class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all appearance-none cursor-pointer
+                            @error('booking_id') border-red-300 @enderror"
                             x-on:change="selectedRange = bookings.find(b => b.id == $event.target.value)?.range ?? ''">
                             @foreach ($activeBookings as $booking)
                                 <option value="{{ $booking->id }}">Kamar {{ $booking->room->room_number }}</option>
