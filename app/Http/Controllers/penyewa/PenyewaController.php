@@ -5,6 +5,7 @@ namespace App\Http\Controllers\penyewa;
 use App\Http\Controllers\Controller;
 use App\Models\AdditionalService;
 use App\Models\Booking;
+use App\Models\MaintenanceRequest;
 use App\Models\Room;
 use App\Models\RoomType;
 use Illuminate\Http\Request;
@@ -174,6 +175,24 @@ class PenyewaController extends Controller
             'description.required' => 'Deskripsi kerusakan wajib diisi.',
             'issue_photo.image' => 'Berkas foto bukti harus berupa gambar.',
             'issue_photo.max' => 'Ukuran foto bukti maksimal 2MB.',
+        ]);
+
+        $booking = Booking::with('room')->findOrFail($request->booking_id);
+        $user = auth()->user();
+
+        $photoPath = null;
+        if ($request->hasFile('issue_photo')) {
+            $photoPath = $request->file('issue_photo')->store('maintenance/photos', 'public');
+        }
+
+        MaintenanceRequest::create([
+            'user_id' => $user->id,
+            'booking_id' => $request->booking_id,
+            'issue_name' => $request->issue_name,
+            'description' => $request->description,
+            'photo' => $photoPath,
+            'location' => 'Kamar '.($booking->room->room_number ?? '-'),
+            'status' => 'pending',
         ]);
 
         return redirect()->route('profile', ['tab' => 'report'])
