@@ -3,7 +3,7 @@
 @section('content')
     <div class="bg-slate-50 min-h-screen">
 
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 pt-8 pb-4">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-6 md:pt-8 pb-4">
             <a href="{{ route('home') }}#daftar-kamar"
                 class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors group">
                 <svg class="w-4 h-4 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor"
@@ -14,12 +14,12 @@
             </a>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 pb-20">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pb-20">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 <div class="lg:col-span-2 space-y-5">
 
-                    <div class="relative rounded-2xl overflow-hidden h-[420px] bg-slate-200 group shadow-sm">
+                    <div class="relative rounded-2xl overflow-hidden h-[220px] md:h-[420px] bg-slate-200 group shadow-sm">
                         <img src="{{ asset('images/room_types/' . $room->roomType->image) }}"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             alt="Interior Kamar {{ $room->room_number }}">
@@ -77,10 +77,9 @@
                             <span class="w-1 h-4 bg-slate-900 rounded-full inline-block"></span>
                             Spesifikasi
                         </h3>
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <div
-                                    class="w-9 h-9 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 flex-shrink-0">
+                                <div class="w-9 h-9 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 flex-shrink-0">
                                     <i class="fas fa-vector-square text-sm"></i>
                                 </div>
                                 <div>
@@ -89,26 +88,21 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <div
-                                    class="w-9 h-9 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-amber-500 flex-shrink-0">
+                                <div class="w-9 h-9 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-amber-500 flex-shrink-0">
                                     <i class="fas fa-bolt text-sm"></i>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Listrik
-                                    </p>
-                                    <p class="text-sm font-bold text-slate-800">
-                                        {{ $room->is_electric_included ? 'Include' : 'Token' }}</p>
+                                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Listrik</p>
+                                    <p class="text-sm font-bold text-slate-800">{{ $room->is_electric_included ? 'Include' : 'Token' }}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <div
-                                    class="w-9 h-9 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-blue-400 flex-shrink-0">
+                                <div class="w-9 h-9 bg-white rounded-lg border border-slate-200 flex items-center justify-center text-blue-400 flex-shrink-0">
                                     <i class="fas fa-tint text-sm"></i>
                                 </div>
                                 <div>
                                     <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Air</p>
-                                    <p class="text-sm font-bold text-slate-800">
-                                        {{ $room->is_water_included ? 'Gratis' : 'Bayar' }}</p>
+                                    <p class="text-sm font-bold text-slate-800">{{ $room->is_water_included ? 'Gratis' : 'Bayar' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -119,24 +113,18 @@
                             <span class="w-1 h-4 bg-emerald-500 rounded-full inline-block"></span>
                             Informasi Harga
                         </h3>
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
-                                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Harian
-                                </p>
-                                <p class="text-base font-black text-slate-900">Rp
-                                    {{ number_format($room->roomType->base_price_daily, 0, ',', '.') }}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="flex sm:flex-col items-center sm:items-center justify-between sm:justify-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest sm:mb-1.5">Harian</p>
+                                <p class="text-base font-black text-slate-900">Rp {{ number_format($room->roomType->base_price_daily, 0, ',', '.') }}</p>
                             </div>
-                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
-                                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">
-                                    Mingguan</p>
-                                <p class="text-base font-black text-slate-900">Rp
-                                    {{ number_format($room->roomType->base_price_weekly, 0, ',', '.') }}</p>
+                            <div class="flex sm:flex-col items-center sm:items-center justify-between sm:justify-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest sm:mb-1.5">Mingguan</p>
+                                <p class="text-base font-black text-slate-900">Rp {{ number_format($room->roomType->base_price_weekly, 0, ',', '.') }}</p>
                             </div>
-                            <div class="p-4 bg-primary/5 rounded-xl border border-primary/10 text-center">
-                                <p class="text-[10px] font-semibold text-primary/60 uppercase tracking-widest mb-1.5">
-                                    Bulanan</p>
-                                <p class="text-base font-black text-primary">Rp
-                                    {{ number_format($room->roomType->base_price_monthly, 0, ',', '.') }}</p>
+                            <div class="flex sm:flex-col items-center sm:items-center justify-between sm:justify-center p-4 bg-primary/5 rounded-xl border border-primary/10">
+                                <p class="text-[10px] font-semibold text-primary/60 uppercase tracking-widest sm:mb-1.5">Bulanan</p>
+                                <p class="text-base font-black text-primary">Rp {{ number_format($room->roomType->base_price_monthly, 0, ',', '.') }}</p>
                             </div>
                         </div>
                     </div>

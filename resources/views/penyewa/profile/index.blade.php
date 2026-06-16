@@ -1,12 +1,14 @@
 @extends('penyewa.layouts.app')
 
 @section('content')
-    <div class="bg-slate-50 min-h-screen py-10">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="bg-slate-50 min-h-screen py-6 md:py-10">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-                <div class="lg:col-span-3 space-y-4">
+                {{-- ── Sidebar (desktop: always visible | mobile: hamburger drawer) ── --}}
+                <div class="lg:col-span-3 space-y-4" x-data="{ open: false }">
 
+                    {{-- Profile card — always visible --}}
                     <div class="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
                         <div
                             class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 flex-shrink-0 overflow-hidden">
@@ -16,7 +18,7 @@
                                 <i class="fas fa-user text-base"></i>
                             @endif
                         </div>
-                        <div class="min-w-0">
+                        <div class="min-w-0 flex-1">
                             <p class="text-sm font-bold text-slate-900 truncate">{{ $user->nickname }}</p>
                             <p class="text-xs text-slate-400 capitalize mt-0.5">{{ $user->role }}</p>
                             @if ($user->is_verified === 'verified')
@@ -36,9 +38,28 @@
                                 </span>
                             @endif
                         </div>
+
+                        {{-- Hamburger button — mobile only --}}
+                        <button @click="open = !open"
+                            class="lg:hidden flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors"
+                            aria-label="Toggle menu">
+                            <i class="fas text-base transition-transform duration-200"
+                               :class="open ? 'fa-times' : 'fa-bars'"></i>
+                        </button>
                     </div>
 
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    {{-- Nav menu — desktop: always visible | mobile: slide-down drawer --}}
+                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden
+                                hidden lg:block"
+                         :class="open ? '!block' : ''"
+                         x-show="true"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 -translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-2"
+                         @click.outside="open = false">
                         <nav class="p-1.5 space-y-0.5">
                             @php
                                 $navItems = [
@@ -83,7 +104,7 @@
                 </div>
 
                 <div class="lg:col-span-9">
-                    <div class="bg-white rounded-2xl border border-slate-200 p-8 min-h-[600px]">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 md:p-8 min-h-[600px]">
 
                         @if (session('success'))
                             <div

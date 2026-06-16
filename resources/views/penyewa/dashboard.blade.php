@@ -2,8 +2,8 @@
 
 @section('content')
     <section id="home" class="bg-white min-h-[calc(100vh-64px)] flex items-center">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16 w-full">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-10 lg:py-16 w-full">
+            <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
                 <div>
                     <span
@@ -12,17 +12,17 @@
                         Hunian Mahasiswa Surabaya
                     </span>
 
-                    <h1 class="text-5xl lg:text-6xl font-black text-slate-900 leading-[1.08] tracking-tight mb-6">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.08] tracking-tight mb-6">
                         Kamar Nyaman,<br>
                         Prestasi <span class="text-primary">Dimulai</span><br>
                         Dari Sini.
                     </h1>
 
-                    <p class="text-lg text-slate-500 leading-relaxed mb-10 max-w-md">
+                    <p class="text-base lg:text-lg text-slate-500 leading-relaxed mb-8 max-w-md">
                         Fasilitas lengkap, 5 menit dari kampus UPN Veteran Jawa Timur. Dikelola secara digital, profesional.
                     </p>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex flex-wrap items-center gap-3">
                         <a href="#daftar-kamar"
                             class="px-6 py-3 bg-primary text-white font-semibold text-sm rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25">
                             Lihat Kamar
@@ -214,7 +214,7 @@
                     @endforeach
                 </div>
 
-                <div class="lg:ml-auto">
+                <div class="lg:ml-auto w-full lg:w-auto">
                     <form action="{{ route('home') }}#daftar-kamar" method="GET">
                         @if (request('category'))
                             <input type="hidden" name="category" value="{{ request('category') }}">
@@ -225,7 +225,7 @@
                             </div>
                             <input type="text" name="search" value="{{ request('search') }}"
                                 placeholder="Cari fasilitas..."
-                                class="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-l-lg text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all w-64">
+                                class="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-l-lg text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all w-full sm:w-64">
                             <button type="submit"
                                 class="px-5 bg-primary text-white text-sm font-semibold rounded-r-lg hover:bg-primary/90 transition-all">
                                 Cari
