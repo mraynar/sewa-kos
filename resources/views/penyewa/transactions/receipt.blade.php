@@ -14,23 +14,135 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
+        /* ─── TASK 1: Safari blank-page fix ────────────────────────────────────
+         * Safari recalculates vh units against the print page dimensions, so
+         * `min-h-screen` (min-height: 100vh) on <body> forces the body to be
+         * at least one full print-page tall even when content is shorter.
+         * This causes a blank second page. Override to auto so height is purely
+         * content-driven in print context. We do NOT remove min-h-screen from
+         * the HTML class — it stays for the normal on-screen display.
+         * ──────────────────────────────────────────────────────────────────── */
         @media print {
+            html, body {
+                height: auto !important;
+                min-height: 0 !important;
+            }
+
+            /* Preserve background colors (dark header, slate panels) in print.
+             * Without this, WebKit strips backgrounds by default. */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             .no-print {
                 display: none !important;
             }
 
             body {
+                /* Reset on-screen body padding (py-10 px-4) to nothing in print —
+                 * the @page margin already provides the outer whitespace. */
+                padding: 0 !important;
                 background: white !important;
             }
 
             @page {
-                margin: 0.5in;
+                /* 0.4in instead of 0.5in to recover ~14.4pt of vertical room
+                 * on each side (28.8pt total), which is enough to accommodate
+                 * 4–5 service line items without overflow. The visual margin is
+                 * still generous and professional at 0.4in. */
+                margin: 0.4in;
                 size: A4 portrait;
             }
 
             .receipt-card {
                 box-shadow: none !important;
                 border: 1px solid #e2e8f0 !important;
+                /* Ensure the card fills the page width in print */
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+
+            /* ─── TASK 2: Print-density overrides to fit one A4 page ────────────
+             * Available print area with 0.4in margins on A4 portrait:
+             *   Height: 297mm − (2 × 0.4in) = 297mm − 20.3mm ≈ 276.7mm ≈ 784pt
+             * Target sections and reduce only vertical spacing/padding.
+             * On-screen Tailwind classes are completely untouched.
+             * ──────────────────────────────────────────────────────────────────── */
+
+            /* Header block: px-8 py-6 → keep px-8, reduce py-6 (24px) → 12px */
+            .receipt-card > div:first-child {
+                padding-top: 12px !important;
+                padding-bottom: 12px !important;
+            }
+
+            /* Body wrapper: px-8 py-6 space-y-6 → keep px-8, reduce py → 12px,
+             * reduce space-y-6 (24px gap) → 12px between major sections */
+            .receipt-card > div:last-child {
+                padding-top: 12px !important;
+                padding-bottom: 12px !important;
+            }
+
+            /* space-y-6 child gap: override the margin-top Tailwind generates */
+            .receipt-card > div:last-child > * + * {
+                margin-top: 12px !important;
+            }
+
+            /* Check-in/out/duration grid cells: p-4 (16px) → 8px */
+            .receipt-card > div:last-child > div > div[class*="p-4"],
+            .receipt-card > div:last-child > div > div > div[class*="p-4"] {
+                padding: 8px !important;
+            }
+
+            /* Room row item: p-4 → p-2 (tighter line items) */
+            .receipt-card > div:last-child > div:nth-child(3) > div > div {
+                padding: 8px 12px !important;
+            }
+
+            /* Service line items: p-4 → tighter */
+            .receipt-card > div:last-child > div:nth-child(3) > div > div[class*="space-y-2"] > div,
+            .receipt-card > div:last-child > div:nth-child(3) .space-y-2 > div {
+                padding: 8px 12px !important;
+            }
+
+            /* "Total Lunas" dark banner: p-5 (20px) → 10px */
+            .receipt-card > div:last-child > div[class*="bg-slate-900"] {
+                padding: 10px 16px !important;
+            }
+
+            /* Footer: pt-4 → pt-2 */
+            .receipt-card > div:last-child > div:last-child {
+                padding-top: 8px !important;
+            }
+
+            /* Subtotal row: pt-4 → pt-2 */
+            .receipt-card [class*="border-dashed"] {
+                padding-top: 8px !important;
+            }
+
+            /* Reduce font-size of the large total figure slightly so it doesn't
+             * claim excessive vertical space (text-2xl → ~18px in print) */
+            .receipt-card p[class*="text-2xl"] {
+                font-size: 18px !important;
+            }
+
+            /* ─── Font/Icon race-condition guard ────────────────────────────────
+             * Google Fonts and Font Awesome are loaded async via <link>.
+             * Safari can open the print dialog before these finish loading.
+             * Font Awesome icons on this page are purely decorative (home icon,
+             * print button is hidden, shield icon in "Verified" badge).
+             * None of them are block-level or contain textual content that
+             * would be invisible if the icon font hasn't loaded.
+             * The print button is already hidden via .no-print.
+             * As a safeguard: ensure <i> icon elements are inline with a
+             * defined minimum width so they don't collapse or reflow text
+             * if the icon font hasn't loaded by print time. */
+            i[class*="fas"],
+            i[class*="fab"],
+            i[class*="fa-"] {
+                display: inline-block !important;
+                min-width: 0.75em;
+                font-style: normal;
             }
         }
     </style>
