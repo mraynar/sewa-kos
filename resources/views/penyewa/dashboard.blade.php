@@ -224,7 +224,7 @@
                                 <i class="fas fa-search text-slate-400 text-xs"></i>
                             </div>
                             <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="Cari fasilitas..."
+                                placeholder="Cari nomor, tipe, atau fasilitas kamar..."
                                 class="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-l-lg text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all w-full sm:w-64">
                             <button type="submit"
                                 class="px-5 bg-primary text-white text-sm font-semibold rounded-r-lg hover:bg-primary/90 transition-all">

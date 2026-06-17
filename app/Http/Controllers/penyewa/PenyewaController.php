@@ -26,7 +26,15 @@ class PenyewaController extends Controller
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('room_number', 'like', '%'.$request->search.'%')
-                    ->orWhere('facilities', 'like', '%'.$request->search.'%');
+                    ->orWhere('facilities', 'like', '%'.$request->search.'%')
+                    ->orWhere('gender_type', 'like', '%'.$request->search.'%')
+                    ->orWhere('area_size', 'like', '%'.$request->search.'%')
+                    ->orWhere('room_rules', 'like', '%'.$request->search.'%')
+                    ->orWhereHas('roomType', function ($subQ) use ($request) {
+                        $subQ->where('name', 'like', '%'.$request->search.'%')
+                            ->orWhere('description', 'like', '%'.$request->search.'%')
+                            ->orWhere('facilities', 'like', '%'.$request->search.'%');
+                    });
             });
         }
 

@@ -28,7 +28,6 @@ class PegawaiDashboardController extends Controller
             ->where('service_status', 'done')
             ->count();
 
-        // Stats for Maintenance Requests (Laporan Kerusakan)
         $totalMaintenance = MaintenanceRequest::where('employee_id', $employeeId)->count();
         $pendingMaintenance = MaintenanceRequest::where('employee_id', $employeeId)
             ->where(function ($query) {
@@ -39,12 +38,10 @@ class PegawaiDashboardController extends Controller
             ->where('status', 'done')
             ->count();
 
-        // Reusable count stats for 3-col display
         $activeTasksCount = $pendingTasks;
         $activeMaintenanceCount = $pendingMaintenance;
         $completedCount = $completedTasks + $completedMaintenance;
 
-        // Upcoming Tasks list
         $upcomingTasks = BookingService::with(['booking.room', 'booking.user', 'additionalService'])
             ->where('employee_id', $employeeId)
             ->where(function ($query) {
