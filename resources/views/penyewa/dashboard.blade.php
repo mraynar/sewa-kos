@@ -200,15 +200,15 @@
             <div class="flex flex-col lg:flex-row gap-4 mb-8">
 
                 <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
-                    <a href="{{ route('home') }}#daftar-kamar"
+                    <a href="{{ route('home', array_filter(['search' => request('search')])) }}#daftar-kamar"
                         class="whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200
                         {{ !request('category') ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-300' }}">
                         Semua
                     </a>
                     @foreach ($categories as $cat)
-                        <a href="?category={{ $cat->id }}#daftar-kamar"
+                        <a href="{{ route('home', array_filter(['category' => $cat->id, 'search' => request('search')])) }}#daftar-kamar"
                             class="whitespace-nowrap px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200
-                            {{ request('category') == $cat->id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-300' }}">
+                            {{ (request('category') == $cat->id || strtolower(request('category')) == strtolower($cat->name)) ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-300' }}">
                             {{ $cat->name }}
                         </a>
                     @endforeach

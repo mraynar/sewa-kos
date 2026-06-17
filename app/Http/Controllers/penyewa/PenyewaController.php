@@ -20,20 +20,33 @@ class PenyewaController extends Controller
         $query = Room::with('roomType');
 
         if ($request->filled('category')) {
-            $query->where('room_type_id', $request->category);
+            $categoryVal = $request->category;
+            if (is_numeric($categoryVal)) {
+                $query->where('room_type_id', $categoryVal);
+            } else {
+                $categorySearch = strtolower($categoryVal);
+                $query->whereHas('roomType', function ($subQ) use ($categorySearch) {
+                    $subQ->whereRaw('LOWER(name) LIKE ?', [$categorySearch]);
+                });
+            }
         }
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('room_number', 'like', '%'.$request->search.'%')
-                    ->orWhere('facilities', 'like', '%'.$request->search.'%')
-                    ->orWhere('gender_type', 'like', '%'.$request->search.'%')
-                    ->orWhere('area_size', 'like', '%'.$request->search.'%')
-                    ->orWhere('room_rules', 'like', '%'.$request->search.'%')
-                    ->orWhereHas('roomType', function ($subQ) use ($request) {
-                        $subQ->where('name', 'like', '%'.$request->search.'%')
-                            ->orWhere('description', 'like', '%'.$request->search.'%')
-                            ->orWhere('facilities', 'like', '%'.$request->search.'%');
+            $searchTerm = '%'.strtolower($request->search).'%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(room_number) LIKE ?', [$searchTerm])
+                    ->orWhereRaw('LOWER(facilities) LIKE ?', [$searchTerm])
+                    ->orWhereRaw('LOWER(gender_type) LIKE ?', [$searchTerm])
+                    ->orWhereRaw('LOWER(area_size) LIKE ?', [$searchTerm])
+                    ->orWhereRaw('LOWER(room_rules) LIKE ?', [$searchTerm])
+                    ->orWhereRaw('CAST(price AS CHAR) LIKE ?', [$searchTerm])
+                    ->orWhereHas('roomType', function ($subQ) use ($searchTerm) {
+                        $subQ->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                            ->orWhereRaw('LOWER(description) LIKE ?', [$searchTerm])
+                            ->orWhereRaw('LOWER(facilities) LIKE ?', [$searchTerm])
+                            ->orWhereRaw('CAST(base_price_daily AS CHAR) LIKE ?', [$searchTerm])
+                            ->orWhereRaw('CAST(base_price_weekly AS CHAR) LIKE ?', [$searchTerm])
+                            ->orWhereRaw('CAST(base_price_monthly AS CHAR) LIKE ?', [$searchTerm]);
                     });
             });
         }

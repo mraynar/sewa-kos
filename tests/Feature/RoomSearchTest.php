@@ -116,3 +116,62 @@ test('can search room by room rules', function () {
         return $rooms->contains('id', $this->room1->id) && ! $rooms->contains('id', $this->room2->id);
     });
 });
+
+test('can search room by price in room', function () {
+    $response = $this->get(route('home', ['search' => '800000']))
+        ->assertStatus(200);
+
+    $response->assertViewHas('rooms', function ($rooms) {
+        return $rooms->contains('id', $this->room1->id) && ! $rooms->contains('id', $this->room2->id);
+    });
+});
+
+test('can search room by daily/weekly/monthly prices in room type', function () {
+    // Search by base_price_daily of Santai Mewah (75000)
+    $response = $this->get(route('home', ['search' => '75000']))
+        ->assertStatus(200);
+
+    $response->assertViewHas('rooms', function ($rooms) {
+        return ! $rooms->contains('id', $this->room1->id) && $rooms->contains('id', $this->room2->id);
+    });
+});
+
+test('can search case-insensitively', function () {
+    // Search using UPPERCASE "SANTAI MEWAH"
+    $response = $this->get(route('home', ['search' => 'SANTAI MEWAH']))
+        ->assertStatus(200);
+
+    $response->assertViewHas('rooms', function ($rooms) {
+        return ! $rooms->contains('id', $this->room1->id) && $rooms->contains('id', $this->room2->id);
+    });
+});
+
+test('can filter by numeric category ID', function () {
+    $response = $this->get(route('home', ['category' => $this->typeHemat->id]))
+        ->assertStatus(200);
+
+    $response->assertViewHas('rooms', function ($rooms) {
+        return $rooms->contains('id', $this->room1->id) && ! $rooms->contains('id', $this->room2->id);
+    });
+});
+
+test('can filter by category name string case-insensitively', function () {
+    $response = $this->get(route('home', ['category' => 'SANTAI MEWAH']))
+        ->assertStatus(200);
+
+    $response->assertViewHas('rooms', function ($rooms) {
+        return ! $rooms->contains('id', $this->room1->id) && $rooms->contains('id', $this->room2->id);
+    });
+});
+
+test('combines category filter and search with AND logic', function () {
+    // Search matches "Kasur" (both rooms), but category filters to "Hemat Murah"
+    $response = $this->get(route('home', [
+        'category' => 'Hemat Murah',
+        'search' => 'Kasur',
+    ]))->assertStatus(200);
+
+    $response->assertViewHas('rooms', function ($rooms) {
+        return $rooms->contains('id', $this->room1->id) && ! $rooms->contains('id', $this->room2->id);
+    });
+});
