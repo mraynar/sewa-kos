@@ -38,20 +38,31 @@ class TaskController extends Controller
     {
         $request->validate([
             'employee_id' => 'required|exists:users,id',
-            'selected_services' => 'required|array',
+            'selected_services' => 'required|array|min:1',
+            'selected_services.*' => 'integer|exists:booking_service,id',
         ], [
             'employee_id.required' => 'Pegawai wajib dipilih.',
             'employee_id.exists' => 'Pegawai tidak ditemukan.',
             'selected_services.required' => 'Layanan wajib dipilih.',
+            'selected_services.min' => 'Minimal satu layanan harus dipilih.',
             'selected_services.array' => 'Format layanan tidak valid.',
+            'selected_services.*.integer' => 'ID layanan tidak valid.',
+            'selected_services.*.exists' => 'Layanan tidak ditemukan di database.',
         ]);
 
-        BookingService::whereIn('id', $request->selected_services)
+        $affectedRows = BookingService::whereIn('id', $request->selected_services)
+            ->whereNull('employee_id')
             ->update([
                 'employee_id' => $request->employee_id,
                 'service_status' => 'on_progress',
             ]);
 
-        return redirect()->back()->with('success', 'Berhasil menugaskan '.count($request->selected_services).' layanan!');
+        if ($affectedRows === 0) {
+            return redirect()->back()->withErrors([
+                'selected_services' => 'Tidak ada layanan yang berhasil ditugaskan. Layanan yang dipilih mungkin sudah dikerjakan staf lain.',
+            ])->withInput();
+        }
+
+        return redirect()->back()->with('success', 'Berhasil menugaskan '.$affectedRows.' layanan!');
     }
 }
