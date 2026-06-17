@@ -47,12 +47,43 @@
         </div>
     </div>
 
-    {{-- Month/year filter --}}
+    {{-- Bulan (month) filter --}}
     <div class="relative">
-        <input
-            id="history-month"
-            type="month"
-            class="w-full md:w-44 px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all cursor-pointer">
+        <select
+            id="history-bulan"
+            class="w-full md:w-40 px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all appearance-none cursor-pointer pr-9">
+            <option value="">Semua Bulan</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+        </select>
+        <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+            <i class="fas fa-chevron-down text-[10px]"></i>
+        </div>
+    </div>
+
+    {{-- Tahun (year) filter — options derived from user's actual booking years --}}
+    <div class="relative">
+        <select
+            id="history-tahun"
+            class="w-full md:w-32 px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all appearance-none cursor-pointer pr-9">
+            <option value="">Semua Tahun</option>
+            @foreach ($availableYears->sortDesc() as $yr)
+                <option value="{{ $yr }}">{{ $yr }}</option>
+            @endforeach
+        </select>
+        <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+            <i class="fas fa-chevron-down text-[10px]"></i>
+        </div>
     </div>
 
 </div>
@@ -70,12 +101,12 @@
     @include('penyewa.profile.partials.history-list', ['bookings' => $bookings, 'filtered' => false])
 </div>
 
-{{-- ─── Live search / filter JS (vanilla fetch, no framework) ─────────────── --}}
 <script>
 (function () {
     const searchInput  = document.getElementById('history-search');
     const statusSelect = document.getElementById('history-status');
-    const monthInput   = document.getElementById('history-month');
+    const bulanSelect  = document.getElementById('history-bulan');
+    const tahunSelect  = document.getElementById('history-tahun');
     const container    = document.getElementById('history-list-container');
     const endpoint     = '{{ route('profile.history.search') }}';
 
@@ -86,11 +117,18 @@
 
         const search = searchInput.value.trim();
         const status = statusSelect.value;
-        const month  = monthInput.value; // "YYYY-MM" or ""
+        const bulan  = bulanSelect.value;  // "1"–"12" or ""
+        const tahun  = tahunSelect.value;  // e.g. "2026" or ""
 
         if (search) params.set('search', search);
         if (status) params.set('status', status);
-        if (month)  params.set('month', month);
+
+        // Period filter only applies when BOTH month and year are selected.
+        // Sending one without the other intentionally does nothing on the backend.
+        if (bulan && tahun) {
+            params.set('month', bulan);
+            params.set('year', tahun);
+        }
 
         // Show a subtle loading state without removing content
         container.style.opacity = '0.5';
@@ -121,13 +159,18 @@
         debounceTimer = setTimeout(fetchResults, 350);
     });
 
-    // Instant response on select/month change
+    // Instant response on any dropdown change
     statusSelect.addEventListener('change', function () {
         clearTimeout(debounceTimer);
         fetchResults();
     });
 
-    monthInput.addEventListener('change', function () {
+    bulanSelect.addEventListener('change', function () {
+        clearTimeout(debounceTimer);
+        fetchResults();
+    });
+
+    tahunSelect.addEventListener('change', function () {
         clearTimeout(debounceTimer);
         fetchResults();
     });

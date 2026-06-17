@@ -82,7 +82,17 @@ class PenyewaController extends Controller
                 ->get();
         }
 
-        return view('penyewa.profile.index', compact('user', 'tab', 'title', 'activeBookings'));
+        // Provide available years for the history month-filter year dropdown.
+        // Derived from the distinct years present in check_in and check_out
+        // for this user's bookings, merged and sorted descending.
+        $availableYears = collect();
+        if ($tab === 'history') {
+            $checkInYears = Booking::where('user_id', $user->id)->selectRaw('YEAR(check_in) as yr')->distinct()->pluck('yr');
+            $checkOutYears = Booking::where('user_id', $user->id)->selectRaw('YEAR(check_out) as yr')->distinct()->pluck('yr');
+            $availableYears = $checkInYears->merge($checkOutYears)->unique()->sort()->values();
+        }
+
+        return view('penyewa.profile.index', compact('user', 'tab', 'title', 'activeBookings', 'availableYears'));
     }
 
     public function historySearch(Request $request)
@@ -106,11 +116,17 @@ class PenyewaController extends Controller
         // ── Month/period overlap filter ───────────────────────────────────────
         // Show any booking whose rental period intersects ANY part of the chosen
         // month: check_in <= end_of_month AND check_out >= start_of_month.
-        $month = $request->input('month', ''); // expected format: "YYYY-MM"
-        if ($month !== '' && preg_match('/^\d{4}-\d{2}$/', $month)) {
-            [$year, $mon] = explode('-', $month);
-            $startOfMonth = Carbon::createFromDate((int) $year, (int) $mon, 1)->startOfMonth()->toDateString();
-            $endOfMonth = Carbon::createFromDate((int) $year, (int) $mon, 1)->endOfMonth()->toDateString();
+        //
+        // Both 'month' (1–12) and 'year' (e.g. 2026) must be valid non-empty
+        // integers for the filter to apply. If only one is provided (e.g. the
+        // user picked a month but left year as "Semua Tahun"), no period filter
+        // is applied — this is intentional to avoid ambiguous cross-year results.
+        $filterMonth = (int) $request->input('month', 0); // 1–12, 0 = not selected
+        $filterYear = (int) $request->input('year', 0);  // e.g. 2026, 0 = not selected
+
+        if ($filterMonth >= 1 && $filterMonth <= 12 && $filterYear >= 1) {
+            $startOfMonth = Carbon::createFromDate($filterYear, $filterMonth, 1)->startOfMonth()->toDateString();
+            $endOfMonth = Carbon::createFromDate($filterYear, $filterMonth, 1)->endOfMonth()->toDateString();
 
             $query->whereDate('check_in', '<=', $endOfMonth)
                 ->whereDate('check_out', '>=', $startOfMonth);
