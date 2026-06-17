@@ -89,4 +89,36 @@ class Booking extends Model
             ->whereDate('check_in', '<=', $today)
             ->whereDate('check_out', '>=', $today);
     }
+
+    /**
+     * Scope: filter by derived display status label.
+     * Mirrors the exact date-boundary logic in getDisplayStatusAttribute() so
+     * the two are always in sync — no duplicated date comparisons elsewhere.
+     *
+     * @param  string  $displayStatus  One of: 'Lunas','Ditempati','Selesai','pending','expired','canceled'
+     */
+    public function scopeWithDisplayStatus(Builder $query, string $displayStatus): Builder
+    {
+        $today = Carbon::today()->toDateString();
+
+        return match ($displayStatus) {
+            // paid AND today < check_in  →  "Lunas" (upcoming)
+            'Lunas' => $query->where('status', 'paid')
+                ->whereDate('check_in', '>', $today),
+
+            // paid AND check_in <= today <= check_out  →  "Ditempati" (active)
+            'Ditempati' => $query->where('status', 'paid')
+                ->whereDate('check_in', '<=', $today)
+                ->whereDate('check_out', '>=', $today),
+
+            // paid AND today > check_out  →  "Selesai" (finished)
+            'Selesai' => $query->where('status', 'paid')
+                ->whereDate('check_out', '<', $today),
+
+            // Raw status values map 1-to-1
+            'pending', 'expired', 'canceled' => $query->where('status', $displayStatus),
+
+            default => $query,
+        };
+    }
 }

@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\MaintenanceRequest;
 use App\Models\Room;
 use App\Models\RoomType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -82,6 +83,74 @@ class PenyewaController extends Controller
         }
 
         return view('penyewa.profile.index', compact('user', 'tab', 'title', 'activeBookings'));
+    }
+
+    public function historySearch(Request $request)
+    {
+        $user = auth()->user();
+
+        $query = Booking::with(['room.roomType'])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc');
+
+        // ── Status filter ─────────────────────────────────────────────────────
+        // The display-status labels 'Lunas'/'Ditempati'/'Selesai' are derived
+        // values, so we translate them via scopeWithDisplayStatus which mirrors
+        // the exact date-boundary logic of getDisplayStatusAttribute().
+        $validStatuses = ['Lunas', 'Ditempati', 'Selesai', 'pending', 'expired', 'canceled'];
+        $status = $request->input('status', '');
+        if ($status !== '' && in_array($status, $validStatuses)) {
+            $query->withDisplayStatus($status);
+        }
+
+        // ── Month/period overlap filter ───────────────────────────────────────
+        // Show any booking whose rental period intersects ANY part of the chosen
+        // month: check_in <= end_of_month AND check_out >= start_of_month.
+        $month = $request->input('month', ''); // expected format: "YYYY-MM"
+        if ($month !== '' && preg_match('/^\d{4}-\d{2}$/', $month)) {
+            [$year, $mon] = explode('-', $month);
+            $startOfMonth = Carbon::createFromDate((int) $year, (int) $mon, 1)->startOfMonth()->toDateString();
+            $endOfMonth = Carbon::createFromDate((int) $year, (int) $mon, 1)->endOfMonth()->toDateString();
+
+            $query->whereDate('check_in', '<=', $endOfMonth)
+                ->whereDate('check_out', '>=', $startOfMonth);
+        }
+
+        // ── Search filter ─────────────────────────────────────────────────────
+        // Fields: room_number, roomType.name, total_price (numeric-only), booking id.
+        $search = trim($request->input('search', ''));
+        if ($search !== '') {
+            // Strip formatting chars so "1.005.000" and "1005000" both work for price
+            $numericSearch = preg_replace('/[^0-9]/', '', $search);
+            $likeTerm = '%'.strtolower($search).'%';
+
+            $query->where(function ($q) use ($likeTerm, $numericSearch) {
+                // Booking ID (string PK like "KOS-178...")
+                $q->whereRaw('LOWER(id) LIKE ?', [$likeTerm]);
+
+                // Room number via JOIN
+                $q->orWhereHas('room', function ($roomQ) use ($likeTerm) {
+                    $roomQ->whereRaw('LOWER(room_number) LIKE ?', [$likeTerm]);
+                });
+
+                // Room type name via nested relation
+                $q->orWhereHas('room.roomType', function ($rtQ) use ($likeTerm) {
+                    $rtQ->whereRaw('LOWER(name) LIKE ?', [$likeTerm]);
+                });
+
+                // Total price — search against the raw numeric value
+                if ($numericSearch !== '') {
+                    $q->orWhereRaw('CAST(total_price AS CHAR) LIKE ?', ['%'.$numericSearch.'%']);
+                }
+            });
+        }
+
+        $bookings = $query->get();
+
+        // $filtered = true tells the partial to show "no results" instead of "no bookings at all"
+        $filtered = true;
+
+        return view('penyewa.profile.partials.history-list', compact('bookings', 'filtered'));
     }
 
     public function updateProfile(Request $request)

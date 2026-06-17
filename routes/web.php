@@ -107,6 +107,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [PenyewaController::class, 'index'])->name('penyewa.dashboard');
 
         Route::get('/profile', [PenyewaController::class, 'profile'])->name('profile');
+        Route::get('/profile/history/search', [PenyewaController::class, 'historySearch'])->name('profile.history.search');
         Route::put('/profile/update', [PenyewaController::class, 'updateProfile'])->name('profile.update');
         Route::put('/profile/password', [PenyewaController::class, 'updatePassword'])->name('profile.password');
         Route::post('/profile/verify', [PenyewaController::class, 'verify'])->name('profile.verify');
