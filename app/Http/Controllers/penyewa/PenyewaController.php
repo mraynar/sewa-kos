@@ -77,7 +77,7 @@ class PenyewaController extends Controller
         if ($tab === 'report') {
             $activeBookings = Booking::with('room')
                 ->where('user_id', $user->id)
-                ->where('status', 'paid')
+                ->currentlyActive()
                 ->get();
         }
 
@@ -198,7 +198,19 @@ class PenyewaController extends Controller
             'issue_photo.max' => 'Ukuran foto bukti maksimal 2MB.',
         ]);
 
-        $booking = Booking::with('room')->findOrFail($request->booking_id);
+        // Backend guard: booking must belong to authenticated user and be currently active.
+        $booking = Booking::with('room')
+            ->where('id', $request->booking_id)
+            ->where('user_id', auth()->id())
+            ->currentlyActive()
+            ->first();
+
+        if (! $booking) {
+            return back()->withErrors([
+                'booking_id' => 'Booking yang dipilih tidak dalam periode sewa aktif saat ini.',
+            ])->withInput();
+        }
+
         $user = auth()->user();
 
         $photoPath = null;
