@@ -16,7 +16,7 @@
       <div class="flex justify-between items-center text-left">
         <div>
           <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Total Pengguna</p>
-          <p class="text-2xl font-bold text-gray-900">{{ $user->count() }} Staf/User</p>
+          <p class="text-2xl font-bold text-gray-900">{{ $user->count() }} User</p>
         </div>
         <i class="fas fa-users text-3xl text-green-500 opacity-20"></i>
       </div>
@@ -159,8 +159,7 @@
         }) {
           return '<div class="px-3 py-2 bg-gray-800">' +
             '<span class="font-bold">' + w.config.labels[seriesIndex] + '</span>' +
-            '<div class="text-xs mt-1">Total: ' + series[seriesIndex] + ' Kamar</div>' +
-            '<div class="text-xs text-green-400">Tersedia: ' + sisaData[seriesIndex] + ' Kamar</div>' +
+            '<div class="text-xs mt-1">Total Pesanan: ' + series[seriesIndex] + ' Booking</div>' +
             '</div>';
         }
       }

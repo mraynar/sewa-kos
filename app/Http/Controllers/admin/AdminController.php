@@ -61,19 +61,20 @@ class AdminController extends Controller
             }
         }
 
-        $roomStats = DB::table('rooms')
+        $roomStats = DB::table('bookings')
+            ->join('rooms', 'bookings.room_id', '=', 'rooms.id')
             ->join('room_types', 'rooms.room_type_id', '=', 'room_types.id')
             ->select(
                 'room_types.name as type_name',
-                DB::raw('COUNT(rooms.id) as total_rooms'),
-                DB::raw('SUM(CASE WHEN rooms.status = "available" THEN 1 ELSE 0 END) as available_rooms')
+                DB::raw('COUNT(bookings.id) as total_bookings')
             )
             ->groupBy('room_types.id', 'room_types.name')
+            ->orderByDesc('total_bookings')
             ->get();
 
         $pie_labels = $roomStats->pluck('type_name')->toArray();
-        $pie_series = $roomStats->pluck('total_rooms')->map(fn ($val) => (int) $val)->toArray();
-        $pie_sisa = $roomStats->pluck('available_rooms')->map(fn ($val) => (int) $val)->toArray();
+        $pie_series = $roomStats->pluck('total_bookings')->map(fn($val) => (int) $val)->toArray();
+        $pie_sisa = array_fill(0, count($pie_series), 0);
 
         return view('admin.index', compact(
             'properti',

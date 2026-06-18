@@ -9,13 +9,24 @@ use Illuminate\Support\Facades\Hash;
 
 class PegawaiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil data user yang hanya memiliki role 'pegawai'
-        $pegawai = User::where('role', 'pegawai')->orderBy('nickname', 'asc')->get();
+        $search = $request->input('search');
 
-        // Sesuaikan nama view ini dengan nama file blade Anda (misal: admin/list-pegawai.blade.php)
-        return view('admin.list-pegawai', compact('pegawai'));
+        $query = User::where('role', 'pegawai');
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nickname', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $pegawai = $query->orderBy('nickname', 'asc')->paginate(10)->withQueryString();
+
+        return view('admin.list-pegawai', compact('pegawai', 'search'));
     }
 
     public function create()
@@ -69,7 +80,7 @@ class PegawaiController extends Controller
         $request->validate([
             'nickname' => 'required|string|max:255',
             'phone' => 'required|numeric|digits_between:10,15',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8',
         ], [
             'nickname.required' => 'Nama panggilan wajib diisi.',

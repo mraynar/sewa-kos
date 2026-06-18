@@ -9,13 +9,25 @@ use Illuminate\Http\Request;
 
 class PropertiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $room = Room::with('roomType')
-            ->orderBy('room_type_id', 'asc')
-            ->get();
+        $filterType = $request->input('filter_type');
+        $filterGender = $request->input('filter_gender');
 
-        return view('admin.list-properti', compact('room'));
+        $query = Room::with('roomType')->orderBy('room_type_id', 'asc');
+
+        if (!empty($filterType)) {
+            $query->where('room_type_id', $filterType);
+        }
+
+        if (!empty($filterGender)) {
+            $query->where('gender_type', $filterGender);
+        }
+
+        $room = $query->paginate(6)->withQueryString();
+        $roomTypes = RoomType::all();
+
+        return view('admin.list-properti', compact('room', 'roomTypes', 'filterType', 'filterGender'));
     }
 
     public function create()
@@ -68,7 +80,7 @@ class PropertiController extends Controller
             $nextNumber = 1;
         }
 
-        $roomNumber = $inisial.str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+        $roomNumber = $inisial . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
 
         Room::create([
             'room_type_id' => $request->room_type_id,
@@ -84,7 +96,7 @@ class PropertiController extends Controller
             'rating' => 0.0,
         ]);
 
-        return redirect()->route('admin.properti.index')->with('success', 'Kamar '.$roomNumber.' berhasil ditambahkan!');
+        return redirect()->route('admin.properti.index')->with('success', 'Kamar ' . $roomNumber . ' berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -156,7 +168,7 @@ class PropertiController extends Controller
                 $nextNumber = 1;
             }
 
-            $data['room_number'] = $inisial.str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+            $data['room_number'] = $inisial . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
         }
 
         $room->update($data);
